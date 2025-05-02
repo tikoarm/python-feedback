@@ -18,7 +18,7 @@ async def cmd_start(message: types.Message):
     
     result = f"Hi!\nYour ID is: {tg_id}"
     if await is_user_admin(tg_id):
-        result += f"You are admin"
+        result += f"\nYou are admin"
     await bot.send_message(message.from_user.id, result)
 
 async def start():

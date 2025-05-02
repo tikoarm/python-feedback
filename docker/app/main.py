@@ -7,7 +7,6 @@ env_loaded = load_dotenv()
 if not env_loaded:
     print("⚠️ .env файл не найден. Переменные окружения могут быть не загружены.")
 
-
 async def main():
     await asyncio.gather(
         telegram_bot.start()
