@@ -1,10 +1,5 @@
 import asyncio
-import sys
-import os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), 'bot'))
-
-import telegram_bot
+from bot import telegram_bot
 
 async def main():
     await asyncio.gather(
