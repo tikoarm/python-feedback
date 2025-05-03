@@ -27,6 +27,8 @@ async def cmd_start(message: types.Message):
     result = f"Hi!\nYour ID is: {tg_id}"
     if await is_admin(tg_id):
         result += f"\nYou are admin"
+
+    result += "Bot's main menu: /profile"
     await bot.send_message(message.from_user.id, result)
 
 @dp.message_handler(commands=['profile'])
