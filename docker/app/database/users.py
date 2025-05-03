@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import mysql.connector
+from cache.admin import update_admins
 
 def get_connection():
     return mysql.connector.connect(
@@ -15,16 +16,17 @@ def get_connection():
         database=os.getenv("MYSQL_DATABASE")
     )
 
-async def is_user_admin(user_id: int) -> bool:
+async def load_admins():
+    print("Loading admin list...")
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        query = "SELECT admin FROM users WHERE user_id = %s LIMIT 1"
-        cursor.execute(query, (user_id,))
-        result = cursor.fetchone()
-        if result:
-            return bool(result[0])
-        return False
+        cursor.execute("SELECT user_id FROM users WHERE admin = 1")
+        rows = cursor.fetchall()
+        admin_list = [row[0] for row in rows]
     finally:
         cursor.close()
         conn.close()
+        print(f"Successfully loaded {len(admin_list)} admins")
+
+    await update_admins(admin_list)

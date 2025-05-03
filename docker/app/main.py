@@ -1,13 +1,15 @@
 import asyncio
 from bot import telegram_bot
 import os
+from database.users import load_admins
+import time
 
-from dotenv import load_dotenv
-env_loaded = load_dotenv()
-if not env_loaded:
-    print("⚠️ .env файл не найден. Переменные окружения могут быть не загружены.")
+import time
+print("⏳ Please wait...")
+time.sleep(2)
 
 async def main():
+    await load_admins()
     await asyncio.gather(
         telegram_bot.start()
     )
