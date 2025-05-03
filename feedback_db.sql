@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 02 2025 г., 19:37
+-- Время создания: Май 03 2025 г., 10:10
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -24,12 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` int NOT NULL,
+  `userid` int NOT NULL,
+  `stars` int NOT NULL DEFAULT '1',
+  `text` varchar(128) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`) VALUES
+(1, 2, 5, 'very good', '2025-05-03 09:16:19');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `users`
 --
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `telegram_id` int NOT NULL,
   `name` varchar(32) NOT NULL,
   `admin` int NOT NULL DEFAULT '0',
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -39,12 +60,20 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `user_id`, `name`, `admin`, `reg_date`) VALUES
-(1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26');
+INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
+(1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26'),
+(2, 1, 'root', 1, '2025-05-03 09:40:51');
 
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `userid` (`userid`);
 
 --
 -- Индексы таблицы `users`
@@ -57,10 +86,26 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
