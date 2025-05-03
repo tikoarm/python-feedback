@@ -5,12 +5,16 @@ load_dotenv()
 
 from aiogram import Bot, Dispatcher, types
 
-from database import users
+from database.users import get_user_profile
 from cache.admin import is_admin
+from bot.keyboard import get_profile_keyboard
 
 tg_token = os.getenv('TG_TOKEN')
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
+
+from bot.handlers.profile_handler import register_profile_handlers
+register_profile_handlers(dp)
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
@@ -20,6 +24,25 @@ async def cmd_start(message: types.Message):
     if await is_admin(tg_id):
         result += f"\nYou are admin"
     await bot.send_message(message.from_user.id, result)
+
+@dp.message_handler(commands=['profile'])
+async def cmd_profile(message: types.Message):
+    user_id = message.from_user.id
+    user_data = await get_user_profile(user_id)
+
+    if not user_data:
+        await message.reply("❌ Profile not found.")
+        return
+    
+    status = "Admin" if int(user_data['admin']) == 1 else "User"
+    text = (
+        f"👤 My Profile:\n\n"
+        f"💎 Name: *{user_data['name']}* 💎\n"
+        f"📝 Number of reviews: *{user_data['review_count']}* 📝\n"
+        f"🔧 Join date: *{user_data['reg_date']}* 🔧\n"
+        f"🔧 Status: *{status}* 🔧\n"
+    )
+    await bot.send_message(message.from_user.id, text, reply_markup=get_profile_keyboard(), parse_mode="Markdown")
 
 async def start():
     await dp.start_polling()
