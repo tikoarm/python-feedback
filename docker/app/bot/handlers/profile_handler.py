@@ -49,11 +49,12 @@ async def process_text_review(message: types.Message):
     if user_id in waiting_for_review:
         review_text = message.text
         rating = user_ratings.get(user_id)
-        reviewid = await save_review(user_id, rating, review_text)
         name = await get_user_name_by_telegramid(user_id)
 
         gemini_request = await generate_gemini_review_answer(name, rating, review_text)
         gemini = await call_gemini(gemini_request)
+        reviewid = await save_review(user_id, rating, review_text, gemini)
+
         await bot.send_message(user_id, f"🙏 Thank you for your feedback!\nReview ID: {reviewid}\n\n{gemini}")
         await cancel_rate_progress_global(user_id, False, False)
     
@@ -107,7 +108,8 @@ async def show_last_review(callback_query: types.CallbackQuery):
         f"*Review Starter:* {review['u_name']}\n"
         f"*Review Stars:* {stars}\n"
         f"*Review Text:* {review['r_text']}\n"
-        f"*Review Date:* {date}\n"
+        f"*Review Date:* {date}\n\n"
+        f"*AI Response:* {review['r_ai_answer']}"
     )
 
     if review['a_text']:

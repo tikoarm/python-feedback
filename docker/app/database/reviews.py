@@ -3,7 +3,7 @@ from database.connection import get_connection
 from database.users import get_internal_user_id
 from bot.telegram_bot import bot
 
-async def save_review(user_id: int, rating: int, text: str) -> int | None:
+async def save_review(user_id: int, rating: int, text: str, ai_response: str) -> int | None:
     conn = await get_connection()
     cursor = conn.cursor()
     try:
@@ -13,8 +13,8 @@ async def save_review(user_id: int, rating: int, text: str) -> int | None:
             return
 
         cursor.execute(
-            "INSERT INTO reviews (userid, stars, text) VALUES (%s, %s, %s)",
-            (internal_user_id, rating, text)
+            "INSERT INTO reviews (userid, stars, text, ai_answer) VALUES (%s, %s, %s, %s)",
+            (internal_user_id, rating, text, ai_response)
         )
         conn.commit()
         review_id = cursor.lastrowid
@@ -38,6 +38,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
                 r.stars AS r_stars,
                 r.text AS r_text,
                 r.date AS r_date,
+                r.ai_answer AS r_ai_answer,
 
                 u.name AS u_name,
 
@@ -66,11 +67,12 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
                 "r_stars": row[2],
                 "r_text": row[3],
                 "r_date": row[4],
-                "u_name": row[5],
-                "a_adminid": row[6],
-                "a_text": row[7],
-                "a_date": row[8],
-                "a_name": row[9]
+                "r_ai_answer": row[5],
+                "u_name": row[6],
+                "a_adminid": row[7],
+                "a_text": row[8],
+                "a_date": row[9],
+                "a_name": row[10]
             }
         return None
     except Exception as e:

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 03 2025 г., 14:18
+-- Время создания: Май 03 2025 г., 16:53
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -35,13 +35,6 @@ CREATE TABLE `answer` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Дамп данных таблицы `answer`
---
-
-INSERT INTO `answer` (`id`, `admin_id`, `review_id`, `text`, `date`) VALUES
-(1, 2, 1, 'thank you! see ya', '2025-05-03 13:42:20');
-
 -- --------------------------------------------------------
 
 --
@@ -53,16 +46,9 @@ CREATE TABLE `reviews` (
   `userid` int NOT NULL,
   `stars` int NOT NULL DEFAULT '1',
   `text` varchar(128) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ai_answer` varchar(256) NOT NULL DEFAULT '-'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `reviews`
---
-
-INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`) VALUES
-(1, 1, 5, 'very good', '2025-05-03 09:16:19'),
-(2, 2, 1, 'review 2', '2025-05-03 14:12:53');
 
 -- --------------------------------------------------------
 
@@ -84,7 +70,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
 (1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26'),
-(2, 1, 'root', 1, '2025-05-03 09:40:51');
+(2, 1, 'root', 1, '2025-05-03 09:40:51'),
+(4, 592048273, 'Artur', 0, '2025-05-03 16:39:25');
 
 --
 -- Индексы сохранённых таблиц
@@ -109,7 +96,8 @@ ALTER TABLE `reviews`
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `telegram_id` (`telegram_id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -119,19 +107,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
