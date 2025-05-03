@@ -2,23 +2,12 @@ import sys
 import os
 import asyncio
 import logging
-from dotenv import load_dotenv
-load_dotenv()
-
-import mysql.connector
 from cache.admin import update_admins
 
-def get_connection():
-    return mysql.connector.connect(
-        host=os.getenv("MYSQL_HOST"),
-        port=int(os.getenv("MYSQL_PORT", 3306)),
-        user=os.getenv("MYSQL_USER"),
-        password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
-    )
+from database.connection import get_connection
 
 async def load_admins():
-    conn = get_connection()
+    conn = await get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT telegram_id FROM users WHERE admin = 1")
@@ -32,7 +21,7 @@ async def load_admins():
     await update_admins(admin_list)
 
 async def get_user_profile(user_id: int):
-    conn = get_connection()
+    conn = await get_connection()
     cursor = conn.cursor(dictionary=True)
     try:
         cursor.execute("""

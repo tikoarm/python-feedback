@@ -13,12 +13,17 @@ tg_token = os.getenv('TG_TOKEN')
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 
-from bot.handlers.profile_handler import register_profile_handlers, set_last_button_message, cancel_rate_progress_global
+from bot.handlers.profile_handler import register_profile_handlers, set_last_button_message, cancel_rate_progress_global, start_review_foruser
 register_profile_handlers(dp)
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
     tg_id = message.from_user.id
+    args = message.get_args()
+    
+    if args == "addreview":
+        await start_review_foruser(tg_id)
+        return
     
     result = f"Hi!\nYour ID is: {tg_id}"
     if await is_admin(tg_id):

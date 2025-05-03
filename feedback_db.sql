@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 03 2025 г., 10:10
+-- Время создания: Май 03 2025 г., 14:18
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -24,6 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `answer`
+--
+
+CREATE TABLE `answer` (
+  `id` int NOT NULL,
+  `admin_id` int NOT NULL,
+  `review_id` int NOT NULL,
+  `text` varchar(128) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `answer`
+--
+
+INSERT INTO `answer` (`id`, `admin_id`, `review_id`, `text`, `date`) VALUES
+(1, 2, 1, 'thank you! see ya', '2025-05-03 13:42:20');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `reviews`
 --
 
@@ -40,7 +61,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`) VALUES
-(1, 2, 5, 'very good', '2025-05-03 09:16:19');
+(1, 1, 5, 'very good', '2025-05-03 09:16:19'),
+(2, 2, 1, 'review 2', '2025-05-03 14:12:53');
 
 -- --------------------------------------------------------
 
@@ -69,6 +91,14 @@ INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
 --
 
 --
+-- Индексы таблицы `answer`
+--
+ALTER TABLE `answer`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `admin_id` (`admin_id`),
+  ADD KEY `review_id` (`review_id`);
+
+--
 -- Индексы таблицы `reviews`
 --
 ALTER TABLE `reviews`
@@ -86,10 +116,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `answer`
+--
+ALTER TABLE `answer`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT для таблицы `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
@@ -100,6 +136,13 @@ ALTER TABLE `users`
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `answer`
+--
+ALTER TABLE `answer`
+  ADD CONSTRAINT `answer_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `answer_ibfk_2` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `reviews`

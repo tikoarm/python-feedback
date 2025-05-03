@@ -9,6 +9,7 @@ COPY app/bot ./bot
 COPY app/database ./database
 COPY app/web ./web
 COPY app/cache ./cache
+COPY app/logic ./logic
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt

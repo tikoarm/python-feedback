@@ -4,6 +4,7 @@ def get_profile_keyboard():
     keyboard = InlineKeyboardMarkup(row_width=1)
     keyboard.add(
         InlineKeyboardButton(text="➕ Add Review", callback_data="add_review"),
+        InlineKeyboardButton(text="⭐️ My Last Review", callback_data="my_last_review"),
         InlineKeyboardButton(text="🚫 Cancel 🚫", callback_data="review_cancel")
     )
     return keyboard
