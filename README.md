@@ -1,3 +1,4 @@
+> ⚠️ This project is still under active development. Features and structure may change.
 # 📝 Telegram Feedback Bot
 
 A feedback collection bot for restaurants, built with **Python**, **aiogram**, **MySQL**, and **Docker**.  
