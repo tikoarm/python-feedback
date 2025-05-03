@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import Dispatcher
 from bot.keyboard import get_ratestars_keyboard
 from bot.telegram_bot import bot
+import logging
 
 user_ratings = {}
 waiting_for_review = set()
@@ -56,5 +57,5 @@ async def clear_last_buttons(user_id):
         try:
             await bot.edit_message_reply_markup(chat_id=user_id, message_id=message_id, reply_markup=None)
         except Exception as e:
-            print(f"Unable to delete the button at clear_last_buttons: {e}")
+            logging.warning(f"Unable to delete the button at clear_last_buttons: {e}")
         last_buttons.pop(user_id, None)
