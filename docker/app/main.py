@@ -2,10 +2,15 @@ import asyncio
 from bot import telegram_bot
 import os
 from database.users import load_admins
-import time
+
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 import time
-print("⏳ Please wait...")
+logging.info("⏳ Please wait...")
 time.sleep(2)
 
 async def main():
@@ -16,7 +21,7 @@ async def main():
 
 if __name__ == '__main__':
     try:
-        print("Запуск бота прошел успешно.")
+        logging.info("⏳ Bot is starting...")
         asyncio.run(main())
         
     except KeyboardInterrupt:

@@ -1,6 +1,7 @@
 import sys
 import os
 import asyncio
+import logging
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -17,7 +18,6 @@ def get_connection():
     )
 
 async def load_admins():
-    print("Loading admin list...")
     conn = get_connection()
     cursor = conn.cursor()
     try:
@@ -27,7 +27,7 @@ async def load_admins():
     finally:
         cursor.close()
         conn.close()
-        print(f"Successfully loaded {len(admin_list)} admins")
+        logging.info(f"Successfully loaded {len(admin_list)} admins")
 
     await update_admins(admin_list)
 

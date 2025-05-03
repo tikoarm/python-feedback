@@ -13,7 +13,7 @@ tg_token = os.getenv('TG_TOKEN')
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 
-from bot.handlers.profile_handler import register_profile_handlers
+from bot.handlers.profile_handler import register_profile_handlers, set_last_button_message, cancel_rate_progress_global
 register_profile_handlers(dp)
 
 @dp.message_handler(commands=['start'])
@@ -34,6 +34,8 @@ async def cmd_profile(message: types.Message):
         await message.reply("❌ Profile not found.")
         return
     
+    await cancel_rate_progress_global(message.from_user.id)
+
     status = "Admin" if int(user_data['admin']) == 1 else "User"
     text = (
         f"👤 My Profile:\n\n"
@@ -42,7 +44,8 @@ async def cmd_profile(message: types.Message):
         f"🔧 Join date: *{user_data['reg_date']}* 🔧\n"
         f"🔧 Status: *{status}* 🔧\n"
     )
-    await bot.send_message(message.from_user.id, text, reply_markup=get_profile_keyboard(), parse_mode="Markdown")
+    sent = await bot.send_message(message.from_user.id, text, reply_markup=get_profile_keyboard(), parse_mode="Markdown")
+    set_last_button_message(message.from_user.id, sent.message_id)
 
 async def start():
     await dp.start_polling()
