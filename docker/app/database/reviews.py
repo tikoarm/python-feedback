@@ -1,17 +1,23 @@
 import logging
 from database.connection import get_connection
+from database.users import get_internal_user_id
+from bot.telegram_bot import bot
 
 async def save_review(user_id: int, rating: int, text: str) -> int | None:
     conn = await get_connection()
     cursor = conn.cursor()
     try:
+        internal_user_id = await get_internal_user_id(user_id)
+        if not internal_user_id:
+            await bot.send_message(user_id, "❌ You are not registered.")
+            return
+
         cursor.execute(
-            "INSERT INTO reviews (userid, rating, text) VALUES (%s, %s, %s)",
-            (user_id, rating, text)
+            "INSERT INTO reviews (userid, stars, text) VALUES (%s, %s, %s)",
+            (internal_user_id, rating, text)
         )
         conn.commit()
         review_id = cursor.lastrowid
-        logging.info(f"✅ Review saved: id={review_id}, user={user_id}, rating={rating}")
         return review_id
     except Exception as e:
         logging.error(f"❌ Failed to save review: {e}", exc_info=True)

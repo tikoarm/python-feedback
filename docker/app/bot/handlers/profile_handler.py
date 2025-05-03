@@ -3,9 +3,12 @@ from aiogram.dispatcher import Dispatcher
 from bot.keyboard import get_ratestars_keyboard
 from bot.telegram_bot import bot, dp
 import logging
-from database.reviews import get_latest_user_review
+from database.reviews import get_latest_user_review, save_review
 from logic.functions import convert_number_to_stars, format_date
 from aiogram.utils.markdown import hlink
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 user_ratings = {}
 waiting_for_review = set()
@@ -44,9 +47,9 @@ async def process_text_review(message: types.Message):
     if user_id in waiting_for_review:
         review_text = message.text
         rating = user_ratings.get(user_id)
-        reviewid = await add_review(user_id, rating, review_text)
+        reviewid = await save_review(user_id, rating, review_text)
 
-        await bot.send_message(user_id, "🙏 Thank you for your feedback!")
+        await bot.send_message(user_id, f"🙏 Thank you for your feedback!\nReview ID: {reviewid}")
         await cancel_rate_progress_global(user_id, False, False)
     
 async def process_review_cancel(callback_query: types.CallbackQuery):
@@ -81,8 +84,9 @@ async def show_last_review(callback_query: types.CallbackQuery):
     user_id = callback_query.from_user.id
 
     review = await get_latest_user_review(user_id)
-    if review == None:
-        link = "https://t.me/tikoarm_feedbackbot?start=addreview"
+    if review == None or not review.get("r_id"):
+        bot_username = os.getenv("TG_BOT_USERNAME")
+        link = f"https://t.me/{bot_username}?start=addreview"
         text = (
             "It looks like you haven’t written a review yet.\n"
             f"Once you do, you’ll be able to view it {hlink('here', link)}."

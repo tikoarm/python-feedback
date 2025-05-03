@@ -6,6 +6,17 @@ from cache.admin import update_admins
 
 from database.connection import get_connection
 
+async def get_internal_user_id(telegram_id: int) -> int | None:
+    conn = await get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT id FROM users WHERE telegram_id = %s", (telegram_id,))
+        row = cursor.fetchone()
+        return row[0] if row else None
+    finally:
+        cursor.close()
+        conn.close()
+        
 async def load_admins():
     conn = await get_connection()
     cursor = conn.cursor()
