@@ -32,7 +32,6 @@ async def process_review_stars(callback_query: types.CallbackQuery):
     
 async def process_review_cancel(callback_query: types.CallbackQuery):
     await callback_query.answer()
-    await callback_query.message.edit_reply_markup(reply_markup=None)
     await cancel_rate_progress_global(callback_query.from_user.id, True)
 
 async def cancel_rate_progress_global(user_id, with_text=False):
