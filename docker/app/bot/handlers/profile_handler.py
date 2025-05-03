@@ -4,12 +4,14 @@ from bot.keyboard import get_ratestars_keyboard
 from bot.telegram_bot import bot, dp
 import logging
 from database.reviews import get_latest_user_review, save_review
+from database.users import get_user_name_by_telegramid
 from logic.functions import convert_number_to_stars, format_date
 from aiogram.utils.markdown import hlink
 from dotenv import load_dotenv
 import os
-load_dotenv()
+from web.gemini import call_gemini, generate_gemini_review_answer
 
+load_dotenv()
 user_ratings = {}
 waiting_for_review = set()
 last_buttons = {}
@@ -17,7 +19,7 @@ last_buttons = {}
 async def process_add_review(callback_query: types.CallbackQuery):
     await callback_query.answer()
     await callback_query.message.edit_reply_markup(reply_markup=None)
-    start_review_foruser(callback_query.from_user.id)
+    await start_review_foruser(callback_query.from_user.id)
 
 async def start_review_foruser(userid):
     sent = await bot.send_message(userid, "On a scale of 1 to 5, how satisfied were you?", 
@@ -48,8 +50,11 @@ async def process_text_review(message: types.Message):
         review_text = message.text
         rating = user_ratings.get(user_id)
         reviewid = await save_review(user_id, rating, review_text)
+        name = await get_user_name_by_telegramid(user_id)
 
-        await bot.send_message(user_id, f"🙏 Thank you for your feedback!\nReview ID: {reviewid}")
+        gemini_request = await generate_gemini_review_answer(name, rating, review_text)
+        gemini = await call_gemini(gemini_request)
+        await bot.send_message(user_id, f"🙏 Thank you for your feedback!\nReview ID: {reviewid}\n\n{gemini}")
         await cancel_rate_progress_global(user_id, False, False)
     
 async def process_review_cancel(callback_query: types.CallbackQuery):

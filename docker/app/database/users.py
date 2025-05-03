@@ -16,6 +16,17 @@ async def get_internal_user_id(telegram_id: int) -> int | None:
     finally:
         cursor.close()
         conn.close()
+
+async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
+    conn = await get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT name FROM users WHERE telegram_id = %s", (telegram_id,))
+        row = cursor.fetchone()
+        return row[0] if row else None
+    finally:
+        cursor.close()
+        conn.close()
         
 async def load_admins():
     conn = await get_connection()
