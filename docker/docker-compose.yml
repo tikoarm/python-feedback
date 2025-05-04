@@ -35,5 +35,15 @@ services:
     depends_on:
       - db
 
+  php:
+    image: php:8.2-apache
+    container_name: feedback_php
+    ports:
+      - "8888:80"
+    volumes:
+      - ./php:/var/www/html
+    depends_on:
+      - app
+
 volumes:
   mysql_data:

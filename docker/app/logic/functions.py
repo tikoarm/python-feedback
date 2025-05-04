@@ -27,3 +27,16 @@ def format_date(date_str: str | datetime) -> str:
         return "Invalid date"
     
     return dt.strftime("%B %-d, %Y, %H:%M")
+
+def get_tg_faq_text():
+    text = (
+        "<b>🤖 FAQ</b>\n\n"
+        "<b>/profile</b> — Main bot page. From here you can:\n"
+        "• Access the admin panel (if you're an admin)\n"
+        "• Write a new review\n"
+        "• View your latest review\n\n"
+        "<b>👨‍💻 For developers:</b>\n"
+        '<a href="http://localhost:5050/review_list/">http://localhost:5050/review_list/</a> — JSON format list of restaurant reviews\n'
+        '<a href="http://localhost:8888/reviews.php">http://localhost:8888/reviews.php</a> — Human-readable version of the reviews list'
+    )
+    return text

@@ -6,6 +6,7 @@ from database.users import get_user_profile, add_user_to_db
 from cache.admin import is_admin
 from bot.keyboard import get_profile_keyboard
 from web.gemini import call_gemini, generate_gemini_review_answer
+from logic.functions import get_tg_faq_text
 
 load_dotenv()
 tg_token = os.getenv('TG_TOKEN')
@@ -14,6 +15,10 @@ dp = Dispatcher(bot)
 
 from bot.handlers.profile_handler import register_profile_handlers, set_last_button_message, cancel_rate_progress_global, start_review_foruser
 register_profile_handlers(dp)
+
+@dp.message_handler(commands=['help', 'faq'])
+async def cmd_help(message: types.Message):
+    await bot.send_message(message.from_user.id, get_tg_faq_text(), parse_mode='HTML')
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):

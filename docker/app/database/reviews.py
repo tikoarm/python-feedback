@@ -2,6 +2,7 @@ import logging
 from database.connection import get_connection
 from database.users import get_internal_user_id
 from bot.telegram_bot import bot
+from logic.functions import convert_number_to_stars, format_date
 
 async def save_review(user_id: int, rating: int, text: str, ai_response: str) -> int | None:
     conn = await get_connection()
@@ -121,14 +122,14 @@ async def get_all_reviews() -> list[dict] | None:
             reviews.append({
                 "r_id": row[0],
                 "r_userid": row[1],
-                "r_stars": row[2],
+                "r_stars": convert_number_to_stars(row[2]),
                 "r_text": row[3],
-                "r_date": row[4],
+                "r_date": format_date(row[4]),
                 "r_ai_answer": row[5],
                 "u_name": row[6],
                 "a_adminid": row[7],
                 "a_text": row[8],
-                "a_date": row[9],
+                "a_date": format_date(row[9]),
                 "a_name": row[10]
             })
         return reviews
