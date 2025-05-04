@@ -2,6 +2,8 @@ import asyncio
 from bot import telegram_bot
 import os
 from database.users import load_admins
+from multiprocessing import Process
+from web.api import start_api
 
 import logging
 logging.basicConfig(
@@ -21,6 +23,10 @@ async def main():
 
 if __name__ == '__main__':
     try:
+        logging.info("⏳ Webserver is starting...")
+        api_process = Process(target=start_api)
+        api_process.start()
+    
         logging.info("⏳ Bot is starting...")
         asyncio.run(main())
         
