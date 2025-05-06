@@ -34,7 +34,10 @@ def get_tg_faq_text():
         "<b>/profile</b> — Main bot page. From here you can:\n"
         "• Access the admin panel (if you're an admin)\n"
         "• Write a new review\n"
-        "• View your latest review\n\n"
+        "• View your latest review\n"
+        "/api_keys - View the list of created API keys\n"
+        "/create_apikey - Create a new API key\n\n"
+        "/check_apikey - Check API key availability\n\n"
         "<b>👨‍💻 For developers:</b>\n\n"
         '📄 localhost:5050/review_list/?user=all | JSON: All reviews\n'
         '📄 localhost:5050/review_list/?user=input_userid_here | JSON: Reviews by user ID\n\n'

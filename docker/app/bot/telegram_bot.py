@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from database.users import get_user_profile, add_user_to_db
 from cache.admin import is_admin
+from cache import api_keys
 from bot.keyboard import get_profile_keyboard
 from web.gemini import call_gemini, generate_gemini_review_answer
 from logic.functions import get_tg_faq_text
@@ -15,6 +16,35 @@ dp = Dispatcher(bot)
 
 from bot.handlers.profile_handler import register_profile_handlers, set_last_button_message, cancel_rate_progress_global, start_review_foruser
 register_profile_handlers(dp)
+
+@dp.message_handler(commands=['api_keys'])
+async def cmd_create_api(message: types.Message):
+    if not await is_admin(message.from_user.id):
+        await bot.send_message(message.from_user.id, "You don't have permission to use this command!", parse_mode='Markdown')
+        return
+    
+    await bot.send_message(message.from_user.id, "All bot's API keys:\n" + api_keys.get_all_api_keys(), parse_mode='Markdown')
+
+@dp.message_handler(commands=['create_apikey'])
+async def cmd_create_api(message: types.Message):
+    if not await is_admin(message.from_user.id):
+        await bot.send_message(message.from_user.id, "You don't have permission to use this command!", parse_mode='Markdown')
+        return
+    
+    await bot.send_message(message.from_user.id, "Generated API key:\n" + api_keys.generate_api_key(), parse_mode='Markdown')
+
+@dp.message_handler(commands=['check_apikey'])
+async def cmd_create_api(message: types.Message):
+    if not await is_admin(message.from_user.id):
+        await bot.send_message(message.from_user.id, "You don't have permission to use this command!", parse_mode='Markdown')
+        return
+    args = message.get_args()
+    if not args:
+        await bot.send_message(message.from_user.id, "*/check_apikey api_key*", parse_mode='Markdown')
+        return
+
+    status = "valid" if api_keys.is_valid_api_key(args) else "invalid"
+    await bot.send_message(message.from_user.id, f"API Key `{args}` is *{status}*", parse_mode='Markdown')
 
 @dp.message_handler(commands=['help', 'faq'])
 async def cmd_help(message: types.Message):
@@ -66,7 +96,7 @@ async def register_user(message):
     if result == True:
         text = (
             "*Welcome, and thank you for registering! 🎉*\n"
-            "We’re excited to have you with us.\n"
+            "We're excited to have you with us.\n"
             "To start using the bot and set up your profile, just type */profile*.\n\n"
             "Looking forward to hearing your feedback!"
         )
