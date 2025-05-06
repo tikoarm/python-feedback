@@ -35,8 +35,11 @@ def get_tg_faq_text():
         "• Access the admin panel (if you're an admin)\n"
         "• Write a new review\n"
         "• View your latest review\n\n"
-        "<b>👨‍💻 For developers:</b>\n"
-        '<a href="http://localhost:5050/review_list/">http://localhost:5050/review_list/</a> — JSON format list of restaurant reviews\n'
-        '<a href="http://localhost:8888/reviews.php">http://localhost:8888/reviews.php</a> — Human-readable version of the reviews list'
+        "<b>👨‍💻 For developers:</b>\n\n"
+        '📄 localhost:5050/review_list/?user=all | JSON: All reviews\n'
+        '📄 localhost:5050/review_list/?user=input_userid_here | JSON: Reviews by user ID\n\n'
+
+        '🌐 localhost:8888/reviews.php?user=all | Web: All reviews\n'
+        '🌐 localhost:8888/reviews.php?user=input_userid_here | Web: Reviews by user ID\n'
     )
     return text
