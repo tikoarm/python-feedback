@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 03 2025 г., 16:53
+-- Время создания: Май 06 2025 г., 11:30
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -35,6 +35,13 @@ CREATE TABLE `answer` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `answer`
+--
+
+INSERT INTO `answer` (`id`, `admin_id`, `review_id`, `text`, `date`) VALUES
+(1, 2, 8, 'spasibo Artur', '2025-05-04 13:06:31');
+
 -- --------------------------------------------------------
 
 --
@@ -49,6 +56,14 @@ CREATE TABLE `reviews` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ai_answer` varchar(256) NOT NULL DEFAULT '-'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`, `ai_answer`) VALUES
+(7, 1, 3, 'review 1 from Tigran', '2025-05-04 13:05:52', 'ai answer on 1'),
+(8, 4, 5, 'review 2 from Artur', '2025-05-04 13:06:17', 'answer from ai to second review');
 
 -- --------------------------------------------------------
 
@@ -71,7 +86,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
 (1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26'),
 (2, 1, 'root', 1, '2025-05-03 09:40:51'),
-(4, 592048273, 'Artur', 0, '2025-05-03 16:39:25');
+(4, 592048273, 'Artur', 0, '2025-05-03 16:39:25'),
+(5, 464651097, 'Max', 0, '2025-05-03 17:58:14');
 
 --
 -- Индексы сохранённых таблиц
@@ -107,19 +123,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT для таблицы `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
