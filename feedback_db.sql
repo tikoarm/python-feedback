@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 06 2025 г., 11:30
+-- Время создания: Май 09 2025 г., 18:30
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -45,6 +45,30 @@ INSERT INTO `answer` (`id`, `admin_id`, `review_id`, `text`, `date`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `api_keys`
+--
+
+CREATE TABLE `api_keys` (
+  `id` int NOT NULL,
+  `api_key` varchar(128) NOT NULL,
+  `created_by` int NOT NULL,
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `api_keys`
+--
+
+INSERT INTO `api_keys` (`id`, `api_key`, `created_by`, `create_date`) VALUES
+(1, '55bc56cf3c4eb12ea6e149674a0b298f', 1, '2025-05-09 17:03:07'),
+(2, '3865ba2a8ee8eb7fab569bbf021dc1d7', 1, '2025-05-09 17:12:19'),
+(3, '5fa87fd44fe2e9dd3492ce4ff94fe750', 1, '2025-05-09 17:16:01'),
+(4, 'eabac29cb05a86606d4e6e8745e5874d', 1, '2025-05-09 17:25:45'),
+(5, '252adf03cc475f26f97f97048a794d87', 1, '2025-05-09 18:00:25');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `reviews`
 --
 
@@ -62,8 +86,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`, `ai_answer`) VALUES
-(7, 1, 3, 'review 1 from Tigran', '2025-05-04 13:05:52', 'ai answer on 1'),
-(8, 4, 5, 'review 2 from Artur', '2025-05-04 13:06:17', 'answer from ai to second review');
+(7, 1, 3, 'review 1 from Tigran', '2025-05-09 13:05:52', 'ai answer on 1'),
+(8, 4, 5, 'review 2 from Artur', '2025-05-09 13:06:17', 'answer from ai to second review');
 
 -- --------------------------------------------------------
 
@@ -73,7 +97,7 @@ INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`, `ai_answer`) VAL
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `telegram_id` int NOT NULL,
+  `telegram_id` bigint NOT NULL,
   `name` varchar(32) NOT NULL,
   `admin` int NOT NULL DEFAULT '0',
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -87,7 +111,8 @@ INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
 (1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26'),
 (2, 1, 'root', 1, '2025-05-03 09:40:51'),
 (4, 592048273, 'Artur', 0, '2025-05-03 16:39:25'),
-(5, 464651097, 'Max', 0, '2025-05-03 17:58:14');
+(5, 464651097, 'Max', 0, '2025-05-03 17:58:14'),
+(6, 8012036055, 'Tigran', 0, '2025-05-06 12:00:48');
 
 --
 -- Индексы сохранённых таблиц
@@ -100,6 +125,13 @@ ALTER TABLE `answer`
   ADD PRIMARY KEY (`id`),
   ADD KEY `admin_id` (`admin_id`),
   ADD KEY `review_id` (`review_id`);
+
+--
+-- Индексы таблицы `api_keys`
+--
+ALTER TABLE `api_keys`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Индексы таблицы `reviews`
@@ -126,6 +158,12 @@ ALTER TABLE `answer`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT для таблицы `api_keys`
+--
+ALTER TABLE `api_keys`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT для таблицы `reviews`
 --
 ALTER TABLE `reviews`
@@ -135,7 +173,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -147,6 +185,12 @@ ALTER TABLE `users`
 ALTER TABLE `answer`
   ADD CONSTRAINT `answer_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `answer_ibfk_2` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `api_keys`
+--
+ALTER TABLE `api_keys`
+  ADD CONSTRAINT `api_keys_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `reviews`
