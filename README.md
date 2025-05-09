@@ -1,8 +1,12 @@
-> ⚠️ This project is still under active development. Features and structure may change.
 # 📝 Telegram Feedback Bot
 
-A feedback collection bot for restaurants, built with **Python**, **aiogram**, **MySQL**, and **Docker**.  
-This project was designed to simulate real-world backend logic and integration in a clean, scalable architecture.
+A feedback collection bot for restaurants, built with **Python**, **aiogram**, **MySQL**, **Flask**, and **Docker**, featuring admin moderation, **Gemini AI** integration, analytics, and a simple PHP frontend. 
+This project simulates real-world backend logic and integration in a clean, scalable architecture.
+
+## 💡 Why This Project Matters
+
+This bot simulates real-world backend challenges:  
+handling authentication, database structure, user feedback logic, and admin moderation — all in a modular and production-like environment. It demonstrates my backend thinking and integration ability.
 
 ---
 
@@ -16,9 +20,9 @@ This project was designed to simulate real-world backend logic and integration i
 - 🧠 Formatted review summaries with converted ratings and readable dates
 - 🗂️ Linked admin replies to specific reviews
 - 🪵 Logging and error tracking
-- 🌐 Planned web interface (PHP frontend reading JSON from Python backend)
-- 🤖 Gemini AI integration (planned: auto-generating admin replies)
-- 📊 Review analytics (planned)
+- 🌐 Simple frontend (PHP): renders user reviews via JSON API
+- 🤖 Gemini AI integration
+- 📊 Review analytics: stats by day, week, month, and average ratings
 - 📦 Dockerized: includes MySQL & phpMyAdmin for local development
 
 ---
@@ -30,11 +34,13 @@ This project was designed to simulate real-world backend logic and integration i
 ├── app/
 │   ├── bot/
 │   │   ├── handlers/            # Handlers for Telegram bot interactions
-│   │   │   └── profile_handler.py
+│   │   │   ├── profile_handler.py
+│   │   │   └── admin_handler.py
 │   │   ├── keyboard.py
 │   │   └── telegram_bot.py
 │   ├── cache/
-│   │   └── admin.py             # Cached admin logic
+│   │   ├── admin.py             # Cached admin logic
+│   │   └── api_keys.py          # API key cache and validation
 │   ├── database/
 │   │   ├── connection.py
 │   │   ├── reviews.py
@@ -42,6 +48,7 @@ This project was designed to simulate real-world backend logic and integration i
 │   ├── logic/
 │   │   └── functions.py         # Reusable logic and utilities
 │   ├── web/
+│   │   ├── api.py               # Flask API routes
 │   │   └── gemini.py            # Gemini API integration
 │   └── main.py                  # Entry point
 ├── docker-compose.yml
@@ -57,53 +64,52 @@ This project was designed to simulate real-world backend logic and integration i
 - **Python 3.10**
 - **aiogram 2.25.1**
 - **MySQL 8.0**
+- **Flask 2.3.3** — for exposing API endpoints
 - **Docker & Docker Compose**
-- **dotenv for env management**
+- **dotenv** — for environment variable management
 - **aiohttp 3.8.6** — for async interaction with external services (e.g., Gemini)
-- **Flask 2.3.3** — for exposing API endpoints (planned)
+- **google-generativeai** — Gemini AI for dynamic response generation
+- **requests** — for HTTP calls from bot to Flask
+- **multiprocessing** — to run Telegram bot and web server in parallel
+- **phpMyAdmin** — included via Docker for local database management
 - **Logging, error handling, async I/O**
 
 ---
 
-## ⚙️ Getting Started
+## 🔌 API Endpoints
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/tikoarm/python-feedback.git
-   cd python-feedback
-   ```
-
-2. Add your `.env` file:
-   ```
-   TG_TOKEN=your_telegram_token
-   TG_BOT_USERNAME=your_bot_username
-
-   GEMINI_API_KEY=your_gemini_api_key
-
-   MYSQL_HOST=db
-   MYSQL_PORT=3306
-   MYSQL_USER=root
-   MYSQL_PASSWORD=root
-   MYSQL_DATABASE=feedback_db
-   
-   API_ADMIN_KEY=your_api_admin_key
-   API_DOMEN=http://app:5050
-   ```
-
-3. Run the project:
-   ```bash
-   docker-compose up --build
-   ```
-
-4. Visit [localhost:8080](http://localhost:8080) for phpMyAdmin (user: root / pass: root)
+- `POST /apikey/add` — Generates a new API key  
+- `GET /review_list/<user_id>` — Returns user reviews  
 
 ---
 
-## 📌 Status
+## 🧠 Tech Highlights
 
-🟢 Core functionality working  
-🔄 Gemini API integration in progress  
-🌐 Web interface planned (PHP + JSON API)
+- Uses `asyncio` and `aiogram` for high-concurrency Telegram handling  
+- Modular architecture with separation of bot, logic, web, and cache  
+- SQL logic written manually — no ORM used  
+- Production-ready structure with environment separation and Docker  
+- Admin dashboard logic with analytics & review moderation
+
+---
+
+## 🧾 .env Configuration Example
+
+```env
+TG_TOKEN=your_telegram_token
+TG_BOT_USERNAME=your_bot_username
+
+GEMINI_API_KEY=your_gemini_api_key
+
+MYSQL_HOST=db
+MYSQL_PORT=3306
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_DATABASE=feedback_db
+
+API_ADMIN_KEY=your_api_admin_key
+API_DOMAIN=http://app:5050
+```
 
 ---
 
