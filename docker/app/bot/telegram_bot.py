@@ -2,15 +2,17 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
-from database.users import get_user_profile, add_user_to_db
+from database.users import get_user_profile, add_user_to_db, get_internal_user_id
 from cache.admin import is_admin
-from cache import api_keys
+from cache.api_keys import db_get_all_api_keys, db_is_valid_api_key
 from bot.keyboard import get_profile_keyboard
-from web.gemini import call_gemini, generate_gemini_review_answer
 from logic.functions import get_tg_faq_text
+import requests
 
 load_dotenv()
 tg_token = os.getenv('TG_TOKEN')
+api_admin_key = os.getenv('API_ADMIN_KEY')
+api_domen = os.getenv('API_DOMEN')
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 
@@ -23,7 +25,8 @@ async def cmd_create_api(message: types.Message):
         await bot.send_message(message.from_user.id, "You don't have permission to use this command!", parse_mode='Markdown')
         return
     
-    await bot.send_message(message.from_user.id, "All bot's API keys:\n" + api_keys.get_all_api_keys(), parse_mode='Markdown')
+    all_api_str = await db_get_all_api_keys()
+    await bot.send_message(message.from_user.id, "All bot's API keys:\n" + all_api_str, parse_mode='Markdown')
 
 @dp.message_handler(commands=['create_apikey'])
 async def cmd_create_api(message: types.Message):
@@ -31,7 +34,16 @@ async def cmd_create_api(message: types.Message):
         await bot.send_message(message.from_user.id, "You don't have permission to use this command!", parse_mode='Markdown')
         return
     
-    await bot.send_message(message.from_user.id, "Generated API key:\n" + api_keys.generate_api_key(), parse_mode='Markdown')
+    try:
+        internal_user_id = await get_internal_user_id(message.from_user.id)
+        response = requests.post(f"{api_domen}/apikey/add?admin_key={api_admin_key}&user_id={internal_user_id}")
+        if response.status_code == 200:
+            api_key = response.json().get("api_key")
+            await bot.send_message(message.from_user.id, f"Generated API key:\n{api_key}", parse_mode='Markdown')
+        else:
+            await bot.send_message(message.from_user.id, "Failed to generate API key.", parse_mode='Markdown')
+    except Exception as e:
+        await bot.send_message(message.from_user.id, f"Error: {e}", parse_mode='Markdown')
 
 @dp.message_handler(commands=['check_apikey'])
 async def cmd_create_api(message: types.Message):
@@ -43,7 +55,7 @@ async def cmd_create_api(message: types.Message):
         await bot.send_message(message.from_user.id, "*/check_apikey api_key*", parse_mode='Markdown')
         return
 
-    status = "valid" if api_keys.is_valid_api_key(args) else "invalid"
+    status = "valid" if await db_is_valid_api_key(args) else "invalid"
     await bot.send_message(message.from_user.id, f"API Key `{args}` is *{status}*", parse_mode='Markdown')
 
 @dp.message_handler(commands=['help', 'faq'])

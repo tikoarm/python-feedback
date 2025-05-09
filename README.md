@@ -85,6 +85,9 @@ This project was designed to simulate real-world backend logic and integration i
    MYSQL_USER=root
    MYSQL_PASSWORD=root
    MYSQL_DATABASE=feedback_db
+   
+   API_ADMIN_KEY=your_api_admin_key
+   API_DOMEN=http://app:5050
    ```
 
 3. Run the project:

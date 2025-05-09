@@ -6,9 +6,11 @@ if ($user_param === null) {
     echo json_encode(["error" => "Missing 'user' parameter"]);
     exit;
 }
+$userid = urlencode($user_param);
+$api_key = "55bc56cf3c4eb12ea6e149674a0b298f";
 
-// Получаем JSON с Python API
-$api_url = "http://app:5050/review_list/?user=" . urlencode($user_param);
+
+$api_url = "http://app:5050/review_list/?user=" . $userid . "&api_key=" . $api_key;
 $json = file_get_contents($api_url);
 $reviews = json_decode($json, true);
 

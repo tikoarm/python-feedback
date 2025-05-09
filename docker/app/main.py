@@ -2,6 +2,7 @@ import asyncio
 from bot import telegram_bot
 import os
 from database.users import load_admins
+from cache.api_keys import load_api_keys
 from multiprocessing import Process
 from web.api import start_api
 
@@ -23,6 +24,8 @@ async def main():
 
 if __name__ == '__main__':
     try:
+        asyncio.run(load_api_keys())
+
         logging.info("⏳ Webserver is starting...")
         api_process = Process(target=start_api)
         api_process.start()
