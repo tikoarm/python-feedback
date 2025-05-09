@@ -12,7 +12,7 @@ import logging
 from dotenv import load_dotenv
 load_dotenv()
 api_admin_key = os.getenv('API_ADMIN_KEY')
-api_domen = os.getenv('API_DOMEN')
+api_domain = os.getenv('API_DOMAIN')
 
 def register_admin_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(process_show_admin_panel, lambda c: c.data == "show_admin_panel")
@@ -35,7 +35,7 @@ async def process_create_api(callback_query: types.CallbackQuery):
     
     try:
         internal_user_id = await get_internal_user_id(callback_query.from_user.id)
-        response = requests.post(f"{api_domen}/apikey/add?admin_key={api_admin_key}&user_id={internal_user_id}")
+        response = requests.post(f"{api_domain}/apikey/add?admin_key={api_admin_key}&user_id={internal_user_id}")
         if response.status_code == 200:
             api_key = response.json().get("api_key")
             await bot.send_message(callback_query.from_user.id, f"Generated API key:\n{api_key}", parse_mode='Markdown')
