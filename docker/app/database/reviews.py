@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import logging
 from database.connection import get_connection
 from database.users import get_internal_user_id
@@ -187,6 +188,71 @@ async def get_user_reviews(userid) -> list[dict] | None:
     except Exception as e:
         logging.error(f"❌ Failed to fetch all reviews: {e}", exc_info=True)
         return None
+    finally:
+        cursor.close()
+        conn.close()
+        
+async def get_global_stats() -> dict:
+    conn = await get_connection()
+    cursor = conn.cursor()
+    try:
+        # Total number of reviews and average rating
+        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews")
+        total_count, avg_rating = cursor.fetchone()
+
+        # In the last day
+        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 1 DAY")
+        day_count, day_avg = cursor.fetchone()
+
+        # In the last week
+        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 7 DAY")
+        week_count, week_avg = cursor.fetchone()
+
+        # In the last month
+        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 30 DAY")
+        month_count, month_avg = cursor.fetchone()
+
+        # Latest review (with user name and answer if available)
+        cursor.execute("""
+            SELECT 
+                r.stars, r.text, r.date, r.ai_answer,
+                u.name,
+                a.text, a.date, admin.name
+            FROM reviews r
+            JOIN users u ON u.id = r.userid
+            LEFT JOIN answer a ON a.review_id = r.id
+            LEFT JOIN users admin ON admin.id = a.admin_id
+            ORDER BY r.id DESC
+            LIMIT 1
+        """)
+        row = cursor.fetchone()
+        last_review = None
+        if row:
+            last_review = {
+                "stars": convert_number_to_stars(row[0]),
+                "text": row[1],
+                "date": format_date(row[2]),
+                "ai_answer": row[3],
+                "user_name": row[4],
+                "admin_answer": row[5],
+                "admin_answer_date": format_date(row[6]) if row[6] else None,
+                "admin_name": row[7]
+            }
+
+        return {
+            "total_reviews": total_count,
+            "average_rating": round(avg_rating or 0, 2),
+            "day_count": day_count or 0,
+            "day_avg": round(day_avg or 0, 2),
+            "week_count": week_count or 0,
+            "week_avg": round(week_avg or 0, 2),
+            "month_count": month_count or 0,
+            "month_avg": round(month_avg or 0, 2),
+            "last_review": last_review
+        }
+    except Exception as e:
+        logging.error(f"❌ Failed to fetch global stats: {e}", exc_info=True)
+        return {}
     finally:
         cursor.close()
         conn.close()

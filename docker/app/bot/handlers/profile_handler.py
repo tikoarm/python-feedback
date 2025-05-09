@@ -60,6 +60,7 @@ async def process_text_review(message: types.Message):
     
 async def process_review_cancel(callback_query: types.CallbackQuery):
     await callback_query.answer()
+    await callback_query.message.edit_reply_markup(reply_markup=None)
     await cancel_rate_progress_global(callback_query.from_user.id, True)
 
 async def cancel_rate_progress_global(user_id, with_text=False, with_button=True):
@@ -81,7 +82,9 @@ async def clear_last_buttons(user_id):
         try:
             await bot.edit_message_reply_markup(chat_id=user_id, message_id=message_id, reply_markup=None)
         except Exception as e:
-            logging.warning(f"Unable to delete the button at clear_last_buttons: {e}")
+            if "Message is not modified" not in str(e):
+                logging.warning(f"Unable to delete the button at clear_last_buttons: {e}")
+                
         last_buttons.pop(user_id, None)
 
 async def show_last_review(callback_query: types.CallbackQuery):
