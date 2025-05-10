@@ -7,10 +7,8 @@ from multiprocessing import Process
 from web.api import start_api
 
 import logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
+from logic.logger import setup_logger
+setup_logger()
 
 import time
 logging.info("⏳ Please wait...")

@@ -10,6 +10,8 @@ services:
       - db
     ports:
       - "5050:5050"
+    volumes:
+      - ./app/logs:/app/logs
 
   db:
     image: mysql:8.0

@@ -1,3 +1,4 @@
 dev_notes.txt
 .DS_Store
 docker/.env
+/docker/app/logs
