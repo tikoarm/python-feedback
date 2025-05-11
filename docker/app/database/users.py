@@ -5,13 +5,13 @@ import logging
 from cache.admin import update_admins
 from database.connection import get_connection
 
+
 async def add_user_to_db(telegram_id: int, name: str):
     conn = await get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO users (telegram_id, name) VALUES (%s, %s)",
-            (telegram_id, name)
+            "INSERT INTO users (telegram_id, name) VALUES (%s, %s)", (telegram_id, name)
         )
         conn.commit()
         logging.info(f"✅ User {telegram_id} ({name}) registered successfully.")
@@ -25,6 +25,7 @@ async def add_user_to_db(telegram_id: int, name: str):
         cursor.close()
         conn.close()
 
+
 async def get_internal_user_id(telegram_id: int) -> int | None:
     conn = await get_connection()
     cursor = conn.cursor()
@@ -36,6 +37,7 @@ async def get_internal_user_id(telegram_id: int) -> int | None:
         cursor.close()
         conn.close()
 
+
 async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
     conn = await get_connection()
     cursor = conn.cursor()
@@ -46,7 +48,8 @@ async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
     finally:
         cursor.close()
         conn.close()
-        
+
+
 async def load_admins():
     conn = await get_connection()
     cursor = conn.cursor()
@@ -61,18 +64,22 @@ async def load_admins():
 
     await update_admins(admin_list)
 
+
 async def get_user_profile(user_id: int):
     conn = await get_connection()
     cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT u.*, (
                 SELECT COUNT(*) FROM reviews r WHERE r.userid = u.id
             ) AS review_count
             FROM users u
             WHERE u.telegram_id = %s
             LIMIT 1
-        """, (user_id,))
+        """,
+            (user_id,),
+        )
         return cursor.fetchone()
     finally:
         cursor.close()

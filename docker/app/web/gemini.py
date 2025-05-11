@@ -7,6 +7,7 @@ import logging
 load_dotenv()
 gemini_token = os.getenv("GEMINI_API_KEY")
 
+
 async def generate_gemini_review_answer(username, stars, text):
     text = (
         "Hi!"
@@ -23,16 +24,11 @@ async def generate_gemini_review_answer(username, stars, text):
     )
     return text
 
+
 async def call_gemini(prompt: str):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_token}"
-    headers = {
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "contents": [{
-            "parts": [{"text": prompt}]
-        }]
-    }
+    headers = {"Content-Type": "application/json"}
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=payload, headers=headers) as response:

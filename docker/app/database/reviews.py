@@ -5,7 +5,10 @@ from database.users import get_internal_user_id
 from bot.telegram_bot import bot
 from logic.functions import convert_number_to_stars, format_date
 
-async def save_review(user_id: int, rating: int, text: str, ai_response: str) -> int | None:
+
+async def save_review(
+    user_id: int, rating: int, text: str, ai_response: str
+) -> int | None:
     conn = await get_connection()
     cursor = conn.cursor()
     try:
@@ -16,7 +19,7 @@ async def save_review(user_id: int, rating: int, text: str, ai_response: str) ->
 
         cursor.execute(
             "INSERT INTO reviews (userid, stars, text, ai_answer) VALUES (%s, %s, %s, %s)",
-            (internal_user_id, rating, text, ai_response)
+            (internal_user_id, rating, text, ai_response),
         )
         conn.commit()
         review_id = cursor.lastrowid
@@ -27,6 +30,7 @@ async def save_review(user_id: int, rating: int, text: str, ai_response: str) ->
     finally:
         cursor.close()
         conn.close()
+
 
 async def get_latest_user_review(telegram_id: int) -> dict | None:
     conn = await get_connection()
@@ -59,7 +63,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
             ORDER BY r.id DESC
             LIMIT 1
             """,
-            (telegram_id,)
+            (telegram_id,),
         )
         row = cursor.fetchone()
         if row:
@@ -74,7 +78,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
                 "a_adminid": row[7],
                 "a_text": row[8],
                 "a_date": row[9],
-                "a_name": row[10]
+                "a_name": row[10],
             }
         return None
     except Exception as e:
@@ -83,6 +87,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
     finally:
         cursor.close()
         conn.close()
+
 
 async def get_all_reviews() -> list[dict] | None:
     conn = await get_connection()
@@ -117,19 +122,21 @@ async def get_all_reviews() -> list[dict] | None:
         rows = cursor.fetchall()
         reviews = []
         for row in rows:
-            reviews.append({
-                "r_id": row[0],
-                "r_userid": row[1],
-                "r_stars": convert_number_to_stars(row[2]),
-                "r_text": row[3],
-                "r_date": format_date(row[4]),
-                "r_ai_answer": row[5],
-                "u_name": row[6],
-                "a_adminid": row[7],
-                "a_text": row[8],
-                "a_date": format_date(row[9]),
-                "a_name": row[10]
-            })
+            reviews.append(
+                {
+                    "r_id": row[0],
+                    "r_userid": row[1],
+                    "r_stars": convert_number_to_stars(row[2]),
+                    "r_text": row[3],
+                    "r_date": format_date(row[4]),
+                    "r_ai_answer": row[5],
+                    "u_name": row[6],
+                    "a_adminid": row[7],
+                    "a_text": row[8],
+                    "a_date": format_date(row[9]),
+                    "a_name": row[10],
+                }
+            )
         return reviews
     except Exception as e:
         logging.error(f"❌ Failed to fetch all reviews: {e}", exc_info=True)
@@ -137,6 +144,7 @@ async def get_all_reviews() -> list[dict] | None:
     finally:
         cursor.close()
         conn.close()
+
 
 async def get_user_reviews(userid) -> list[dict] | None:
     conn = await get_connection()
@@ -171,19 +179,21 @@ async def get_user_reviews(userid) -> list[dict] | None:
         rows = cursor.fetchall()
         reviews = []
         for row in rows:
-            reviews.append({
-                "r_id": row[0],
-                "r_userid": row[1],
-                "r_stars": convert_number_to_stars(row[2]),
-                "r_text": row[3],
-                "r_date": format_date(row[4]),
-                "r_ai_answer": row[5],
-                "u_name": row[6],
-                "a_adminid": row[7],
-                "a_text": row[8],
-                "a_date": format_date(row[9]),
-                "a_name": row[10]
-            })
+            reviews.append(
+                {
+                    "r_id": row[0],
+                    "r_userid": row[1],
+                    "r_stars": convert_number_to_stars(row[2]),
+                    "r_text": row[3],
+                    "r_date": format_date(row[4]),
+                    "r_ai_answer": row[5],
+                    "u_name": row[6],
+                    "a_adminid": row[7],
+                    "a_text": row[8],
+                    "a_date": format_date(row[9]),
+                    "a_name": row[10],
+                }
+            )
         return reviews
     except Exception as e:
         logging.error(f"❌ Failed to fetch all reviews: {e}", exc_info=True)
@@ -191,7 +201,8 @@ async def get_user_reviews(userid) -> list[dict] | None:
     finally:
         cursor.close()
         conn.close()
-        
+
+
 async def get_global_stats() -> dict:
     conn = await get_connection()
     cursor = conn.cursor()
@@ -201,19 +212,26 @@ async def get_global_stats() -> dict:
         total_count, avg_rating = cursor.fetchone()
 
         # In the last day
-        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 1 DAY")
+        cursor.execute(
+            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 1 DAY"
+        )
         day_count, day_avg = cursor.fetchone()
 
         # In the last week
-        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 7 DAY")
+        cursor.execute(
+            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 7 DAY"
+        )
         week_count, week_avg = cursor.fetchone()
 
         # In the last month
-        cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 30 DAY")
+        cursor.execute(
+            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 30 DAY"
+        )
         month_count, month_avg = cursor.fetchone()
 
         # Latest review (with user name and answer if available)
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT 
                 r.stars, r.text, r.date, r.ai_answer,
                 u.name,
@@ -224,7 +242,8 @@ async def get_global_stats() -> dict:
             LEFT JOIN users admin ON admin.id = a.admin_id
             ORDER BY r.id DESC
             LIMIT 1
-        """)
+        """
+        )
         row = cursor.fetchone()
         last_review = None
         if row:
@@ -236,7 +255,7 @@ async def get_global_stats() -> dict:
                 "user_name": row[4],
                 "admin_answer": row[5],
                 "admin_answer_date": format_date(row[6]) if row[6] else None,
-                "admin_name": row[7]
+                "admin_name": row[7],
             }
 
         return {
@@ -248,7 +267,7 @@ async def get_global_stats() -> dict:
             "week_avg": round(week_avg or 0, 2),
             "month_count": month_count or 0,
             "month_avg": round(month_avg or 0, 2),
-            "last_review": last_review
+            "last_review": last_review,
         }
     except Exception as e:
         logging.error(f"❌ Failed to fetch global stats: {e}", exc_info=True)

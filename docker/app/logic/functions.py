@@ -1,6 +1,7 @@
 from datetime import datetime
 import logging
 
+
 def convert_number_to_stars(number):
     max_stars = 5
     text = ""
@@ -12,6 +13,7 @@ def convert_number_to_stars(number):
             text += "☆"
 
     return text
+
 
 def format_date(date_str: str | datetime) -> str:
     try:
@@ -25,8 +27,9 @@ def format_date(date_str: str | datetime) -> str:
     except Exception as e:
         logging.error(f"Invalid date: {date_str}")
         return "Invalid date"
-    
+
     return dt.strftime("%B %-d, %Y, %H:%M")
+
 
 def get_tg_faq_text():
     text = (
@@ -37,10 +40,9 @@ def get_tg_faq_text():
         "• View your latest review\n"
         "/check_apikey - Check API key availability\n\n"
         "<b>👨‍💻 For developers:</b>\n\n"
-        '📄 localhost:5050/review_list/?user=all | JSON: All reviews\n'
-        '📄 localhost:5050/review_list/?user=input_userid_here | JSON: Reviews by user ID\n\n'
-
-        '🌐 localhost:8888/reviews.php?user=all | Web: All reviews\n'
-        '🌐 localhost:8888/reviews.php?user=input_userid_here | Web: Reviews by user ID\n'
+        "📄 localhost:5050/review_list/?user=all | JSON: All reviews\n"
+        "📄 localhost:5050/review_list/?user=input_userid_here | JSON: Reviews by user ID\n\n"
+        "🌐 localhost:8888/reviews.php?user=all | Web: All reviews\n"
+        "🌐 localhost:8888/reviews.php?user=input_userid_here | Web: Reviews by user ID\n"
     )
     return text
