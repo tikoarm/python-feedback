@@ -1,6 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
-from bot.telegram_bot import bot, dp, is_admin
+from cache.admin import is_admin
 from bot.handlers.profile_handler import set_last_button_message
 from bot.keyboard import global_admins_buttons
 from cache.api_keys import db_get_all_api_keys, db_is_valid_api_key
@@ -8,8 +8,8 @@ from database.users import get_internal_user_id
 from database.reviews import get_global_stats
 import requests
 import os
-import logging
 from dotenv import load_dotenv
+from bot.messenger import send_message_safe
 
 load_dotenv()
 api_admin_key = os.getenv("API_ADMIN_KEY")
@@ -44,7 +44,7 @@ async def process_create_api(callback_query: types.CallbackQuery):
     await callback_query.message.edit_reply_markup(reply_markup=None)
 
     if not await is_admin(callback_query.from_user.id):
-        await bot.send_message(
+        await send_message_safe(
             callback_query.from_user.id,
             "You don't have permission to use this command!",
             parse_mode="Markdown",
@@ -58,19 +58,19 @@ async def process_create_api(callback_query: types.CallbackQuery):
         )
         if response.status_code == 200:
             api_key = response.json().get("api_key")
-            await bot.send_message(
+            await send_message_safe(
                 callback_query.from_user.id,
                 f"Generated API key:\n{api_key}",
                 parse_mode="Markdown",
             )
         else:
-            await bot.send_message(
+            await send_message_safe(
                 callback_query.from_user.id,
                 "Failed to generate API key.",
                 parse_mode="Markdown",
             )
     except Exception as e:
-        await bot.send_message(
+        await send_message_safe(
             callback_query.from_user.id, f"Error: {e}", parse_mode="Markdown"
         )
 
@@ -80,7 +80,7 @@ async def process_api_keys(callback_query: types.CallbackQuery):
     await callback_query.message.edit_reply_markup(reply_markup=None)
 
     if not await is_admin(callback_query.from_user.id):
-        await bot.send_message(
+        await send_message_safe(
             callback_query.from_user.id,
             "You don't have permission to use this command!",
             parse_mode="Markdown",
@@ -88,7 +88,7 @@ async def process_api_keys(callback_query: types.CallbackQuery):
         return
 
     all_api_str = await db_get_all_api_keys()
-    await bot.send_message(
+    await send_message_safe(
         callback_query.from_user.id,
         "All bot's API keys:\n" + all_api_str,
         parse_mode="Markdown",
@@ -122,7 +122,7 @@ async def process_admin_info(callback_query: types.CallbackQuery):
     if lr["admin_answer"]:
         text += f"\n👮‍♂️ Admin ({lr['admin_name']}): {lr['admin_answer']} ({lr['admin_answer_date']})"
 
-    await bot.send_message(callback_query.from_user.id, text, parse_mode="Markdown")
+    await send_message_safe(callback_query.from_user.id, text, parse_mode="Markdown")
 
 
 async def process_show_admin_panel(callback_query: types.CallbackQuery):
@@ -132,7 +132,7 @@ async def process_show_admin_panel(callback_query: types.CallbackQuery):
     if not await is_admin(callback_query.from_user.id):
         return 0
 
-    sent = await bot.send_message(
+    sent = await send_message_safe(
         callback_query.from_user.id,
         "Please, select action...",
         reply_markup=global_admins_buttons(),

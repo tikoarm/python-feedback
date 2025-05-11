@@ -33,7 +33,7 @@ async def load_api_keys():
         logging.info(f"Successfully loaded {len(keys)} API keys")
 
 
-####Telegram Functions
+# Telegram Functions
 async def db_add_api_key(api_key: str, user_id: int) -> None:
     conn = await get_connection()
     cursor = conn.cursor()

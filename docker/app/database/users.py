@@ -1,6 +1,3 @@
-import sys
-import os
-import asyncio
 import logging
 from cache.admin import update_admins
 from database.connection import get_connection

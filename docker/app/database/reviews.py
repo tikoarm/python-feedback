@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta
 import logging
 from database.connection import get_connection
 from database.users import get_internal_user_id
-from bot.telegram_bot import bot
 from logic.functions import convert_number_to_stars, format_date
 
 
@@ -14,7 +12,9 @@ async def save_review(
     try:
         internal_user_id = await get_internal_user_id(user_id)
         if not internal_user_id:
-            await bot.send_message(user_id, "❌ You are not registered.")
+            logging.warning(
+                f"[SAVE_REVIEW] User {user_id} attempted to submit a review but is not registered."
+            )
             return
 
         cursor.execute(
@@ -38,7 +38,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
     try:
         cursor.execute(
             """
-            SELECT 
+            SELECT
                 r.id AS r_id,
                 r.userid AS r_userid,
                 r.stars AS r_stars,
@@ -95,7 +95,7 @@ async def get_all_reviews() -> list[dict] | None:
     try:
         cursor.execute(
             """
-            SELECT 
+            SELECT
                 r.id AS r_id,
                 r.userid AS r_userid,
                 r.stars AS r_stars,
@@ -150,7 +150,7 @@ async def get_user_reviews(userid) -> list[dict] | None:
     conn = await get_connection()
     cursor = conn.cursor()
     query = """
-            SELECT 
+            SELECT
                 r.id AS r_id,
                 r.userid AS r_userid,
                 r.stars AS r_stars,
@@ -232,7 +232,7 @@ async def get_global_stats() -> dict:
         # Latest review (with user name and answer if available)
         cursor.execute(
             """
-            SELECT 
+            SELECT
                 r.stars, r.text, r.date, r.ai_answer,
                 u.name,
                 a.text, a.date, admin.name

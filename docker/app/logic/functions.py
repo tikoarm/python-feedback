@@ -24,7 +24,7 @@ def format_date(date_str: str | datetime) -> str:
                 dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
             except ValueError:
                 dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M")
-    except Exception as e:
+    except Exception:
         logging.error(f"Invalid date: {date_str}")
         return "Invalid date"
 

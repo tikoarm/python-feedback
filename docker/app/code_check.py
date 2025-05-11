@@ -12,7 +12,7 @@ black_log = os.path.join(log_dir, f"black_{timestamp}.log")
 
 print("[CHECKER] Running flake8...")
 with open(flake8_log, "w") as f:
-    subprocess.run(["flake8", ".", "--ignore=E501"], stdout=f, stderr=f)
+    subprocess.run(["flake8", ".", "--ignore=E501,W503"], stdout=f, stderr=f)
 
 print("[CHECKER] Running black...")
 with open(black_log, "w") as f:

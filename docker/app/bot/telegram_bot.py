@@ -1,25 +1,28 @@
 import os
-import asyncio
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from database.users import get_user_profile, add_user_to_db
 from cache.admin import is_admin
+from cache.api_keys import db_is_valid_api_key
 from bot.keyboard import get_profile_keyboard
 from logic.functions import get_tg_faq_text
+from bot.handlers.profile_handler import (
+    register_profile_handlers,
+    set_last_button_message,
+    cancel_rate_progress_global,
+    start_review_foruser,
+    process_text_review,
+    waiting_for_review,
+)
+from bot.handlers.admin_handler import register_admin_handlers
+from bot import messenger
 
 load_dotenv()
 tg_token = os.getenv("TG_TOKEN")
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 
-from bot.handlers.profile_handler import (
-    register_profile_handlers,
-    set_last_button_message,
-    cancel_rate_progress_global,
-    start_review_foruser,
-)
-from bot.handlers.admin_handler import register_admin_handlers
-
+messenger.init_bot(bot)
 register_profile_handlers(dp)
 register_admin_handlers(dp)
 
@@ -62,7 +65,7 @@ async def cmd_start(message: types.Message):
 
     result = f"Hi!\nYour ID is: {tg_id}"
     if await is_admin(tg_id):
-        result += f"\nYou are admin"
+        result += "\nYou are admin"
 
     result += "\nBot's main menu: /profile"
     await bot.send_message(message.from_user.id, result)
@@ -101,7 +104,7 @@ async def register_user(message):
     name = message.from_user.full_name
 
     result = await add_user_to_db(telegram_id, name)
-    if result == True:
+    if result:
         text = (
             "*Welcome, and thank you for registering! 🎉*\n"
             "We're excited to have you with us.\n"
@@ -109,6 +112,14 @@ async def register_user(message):
             "Looking forward to hearing your feedback!"
         )
         await bot.send_message(telegram_id, text, parse_mode="Markdown")
+
+
+@dp.message_handler(
+    lambda message: message.from_user.id in waiting_for_review
+    and not message.text.startswith("/")
+)
+async def process_text_review_tg(message: types.Message):
+    await process_text_review(message)
 
 
 async def start():

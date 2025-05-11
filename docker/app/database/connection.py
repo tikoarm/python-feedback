@@ -1,10 +1,8 @@
 from dotenv import load_dotenv
-import asyncio
 import os
+import mysql.connector
 
 load_dotenv()
-
-import mysql.connector
 
 
 async def get_connection():

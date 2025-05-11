@@ -1,5 +1,3 @@
-import asyncio
-
 _admin_set = set()
 
 

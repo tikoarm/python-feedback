@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-import asyncio
 import os
 import aiohttp
 import logging
