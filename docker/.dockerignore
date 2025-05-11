@@ -1,0 +1,21 @@
+# ignore editor-specific folders
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# system junk files
+.DS_Store
+
+# logs
+logs/
+
+# environment variable files
+.env
+.env.*
+
+# git data (if not needed in the image)
+.git
+.gitignore

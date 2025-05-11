@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 from flask import Flask, jsonify, request
 
 from cache import api_keys
@@ -61,6 +61,65 @@ def add_api_key():
 
     new_api_key = asyncio.run(api_keys.generate_api_key(user_id))
     return jsonify({"api_key": new_api_key})
+
+
+@app.route("/logs/view", methods=["GET"])
+def logs_view_process():
+    admkey_param = request.args.get("admin_key")
+    if not admkey_param:
+        return jsonify({"error": "Admin Key is required"}), 400
+
+    adm_key = admkey_param.strip()
+    if adm_key != admin_key:
+        error_message = f"Admin Key '{adm_key}' is Invalid!"
+        return jsonify({"error": error_message}), 400
+
+    logtype_param = request.args.get("log_type")
+    if not logtype_param:
+        return jsonify({"error": "Log Type is required"}), 400
+
+    try:
+        env_values = dotenv_values()
+    except Exception:
+        env_values = {}
+
+    sensitive_values = list(
+        {
+            v
+            for v in list(env_values.values()) + list(os.environ.values())
+            if v and len(v) >= 6
+        }
+    )
+
+    # Mask sensitive values in log lines
+    def mask_sensitive(line, sensitive_values):
+        for value in sensitive_values:
+            if value and value in line:
+                line = line.replace(value, "--hidden--")
+        return line
+
+    log_files = {
+        "error": "logs/error.log",
+        "warning": "logs/warning.log",
+        "info": "logs/info.log",
+    }
+
+    if logtype_param not in log_files:
+        return jsonify({"error": "Log Type is incorrect"}), 400
+
+    file_path = log_files[logtype_param]
+    try:
+        with open(file_path, "r") as f:
+            raw_lines = f.readlines()
+            masked_lines = [
+                mask_sensitive(line, sensitive_values) for line in raw_lines
+            ]
+            lines = masked_lines[-25:]
+
+    except FileNotFoundError:
+        return jsonify({"error": f"Log file for '{logtype_param}' not found"}), 404
+
+    return jsonify({"log_type": logtype_param, "lines": lines})
 
 
 def start_api():

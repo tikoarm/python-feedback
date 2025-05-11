@@ -44,5 +44,6 @@ def get_tg_faq_text():
         "📄 localhost:5050/review_list/?user=input_userid_here | JSON: Reviews by user ID\n\n"
         "🌐 localhost:8888/reviews.php?user=all | Web: All reviews\n"
         "🌐 localhost:8888/reviews.php?user=input_userid_here | Web: Reviews by user ID\n"
+        "🌐 localhost:8888/logs.php | Web: All project logs"
     )
     return text
