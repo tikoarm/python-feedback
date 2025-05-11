@@ -1,7 +1,8 @@
-from dotenv import load_dotenv
-import os
-import aiohttp
 import logging
+import os
+
+import aiohttp
+from dotenv import load_dotenv
 
 load_dotenv()
 gemini_token = os.getenv("GEMINI_API_KEY")

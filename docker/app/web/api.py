@@ -1,10 +1,11 @@
-from flask import Flask, jsonify, request
 import asyncio
 import os
-from dotenv import load_dotenv
 
-from database.reviews import get_all_reviews, get_user_reviews
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+
 from cache import api_keys
+from database.reviews import get_all_reviews, get_user_reviews
 
 load_dotenv()
 admin_key = os.getenv("API_ADMIN_KEY")

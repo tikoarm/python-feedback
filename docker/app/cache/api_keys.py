@@ -1,6 +1,7 @@
-import secrets
-from database.connection import get_connection
 import logging
+import secrets
+
+from database.connection import get_connection
 
 api_keys_cache = set()
 

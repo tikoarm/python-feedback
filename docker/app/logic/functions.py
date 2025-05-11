@@ -1,5 +1,5 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
 
 def convert_number_to_stars(number):

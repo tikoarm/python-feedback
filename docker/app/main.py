@@ -1,13 +1,13 @@
 import asyncio
-from bot import telegram_bot
-from database.users import load_admins
-from cache.api_keys import load_api_keys
-from multiprocessing import Process
-from web.api import start_api
-import time
 import logging
-from logic.logger import setup_logger
+import time
+from multiprocessing import Process
 
+from bot import telegram_bot
+from cache.api_keys import load_api_keys
+from database.users import load_admins
+from logic.logger import setup_logger
+from web.api import start_api
 
 setup_logger()
 logging.info("⏳ Please wait...")

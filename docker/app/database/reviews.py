@@ -1,4 +1,5 @@
 import logging
+
 from database.connection import get_connection
 from database.users import get_internal_user_id
 from logic.functions import convert_number_to_stars, format_date

@@ -1,21 +1,23 @@
 import os
-from dotenv import load_dotenv
+
 from aiogram import Bot, Dispatcher, types
-from database.users import get_user_profile, add_user_to_db
-from cache.admin import is_admin
-from cache.api_keys import db_is_valid_api_key
-from bot.keyboard import get_profile_keyboard
-from logic.functions import get_tg_faq_text
+from dotenv import load_dotenv
+
+from bot import messenger
+from bot.handlers.admin_handler import register_admin_handlers
 from bot.handlers.profile_handler import (
+    cancel_rate_progress_global,
+    process_text_review,
     register_profile_handlers,
     set_last_button_message,
-    cancel_rate_progress_global,
     start_review_foruser,
-    process_text_review,
     waiting_for_review,
 )
-from bot.handlers.admin_handler import register_admin_handlers
-from bot import messenger
+from bot.keyboard import get_profile_keyboard
+from cache.admin import is_admin
+from cache.api_keys import db_is_valid_api_key
+from database.users import add_user_to_db, get_user_profile
+from logic.functions import get_tg_faq_text
 
 load_dotenv()
 tg_token = os.getenv("TG_TOKEN")
