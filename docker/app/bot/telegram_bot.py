@@ -64,6 +64,12 @@ async def cmd_start(message: types.Message):
     tg_id = message.from_user.id
     args = message.get_args()
 
+    user_data = await get_user_profile(tg_id)
+
+    if not user_data:
+        await register_user(message, args)
+        return
+
     if args == "addreview":
         await start_review_foruser(tg_id)
         return
@@ -104,11 +110,11 @@ async def cmd_profile(message: types.Message):
     set_last_button_message(message.from_user.id, sent.message_id)
 
 
-async def register_user(message):
+async def register_user(message, args="Unknown"):
     telegram_id = message.from_user.id
     name = message.from_user.full_name
 
-    result = await add_user_to_db(telegram_id, name)
+    result = await add_user_to_db(telegram_id, name, args)
     if result:
         text = (
             "*Welcome, and thank you for registering! 🎉*\n"

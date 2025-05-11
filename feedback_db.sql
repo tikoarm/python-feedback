@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: db
--- Время создания: Май 09 2025 г., 18:30
+-- Время создания: Май 11 2025 г., 18:45
 -- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.27
 
@@ -64,7 +64,8 @@ INSERT INTO `api_keys` (`id`, `api_key`, `created_by`, `create_date`) VALUES
 (2, '3865ba2a8ee8eb7fab569bbf021dc1d7', 1, '2025-05-09 17:12:19'),
 (3, '5fa87fd44fe2e9dd3492ce4ff94fe750', 1, '2025-05-09 17:16:01'),
 (4, 'eabac29cb05a86606d4e6e8745e5874d', 1, '2025-05-09 17:25:45'),
-(5, '252adf03cc475f26f97f97048a794d87', 1, '2025-05-09 18:00:25');
+(5, '252adf03cc475f26f97f97048a794d87', 1, '2025-05-09 18:00:25'),
+(6, 'c5b5bfb5d4dcaa4f8d04831a6d719b4b', 1, '2025-05-11 13:41:51');
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,8 @@ CREATE TABLE `reviews` (
 
 INSERT INTO `reviews` (`id`, `userid`, `stars`, `text`, `date`, `ai_answer`) VALUES
 (7, 1, 3, 'review 1 from Tigran', '2025-05-09 13:05:52', 'ai answer on 1'),
-(8, 4, 5, 'review 2 from Artur', '2025-05-09 13:06:17', 'answer from ai to second review');
+(8, 4, 5, 'review 2 from Artur', '2025-05-09 13:06:17', 'answer from ai to second review'),
+(9, 1, 5, 'Большое спасибо, нам все понравилось', '2025-05-11 13:41:23', 'Большое спасибо за ваш отзыв! Мы очень рады, что вам все понравилось.\n');
 
 -- --------------------------------------------------------
 
@@ -100,6 +102,7 @@ CREATE TABLE `users` (
   `telegram_id` bigint NOT NULL,
   `name` varchar(32) NOT NULL,
   `admin` int NOT NULL DEFAULT '0',
+  `source` varchar(64) NOT NULL DEFAULT 'Unknown',
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -107,12 +110,11 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `reg_date`) VALUES
-(1, 251464707, 'Tigran', 1, '2025-05-02 19:29:26'),
-(2, 1, 'root', 1, '2025-05-03 09:40:51'),
-(4, 592048273, 'Artur', 0, '2025-05-03 16:39:25'),
-(5, 464651097, 'Max', 0, '2025-05-03 17:58:14'),
-(6, 8012036055, 'Tigran', 0, '2025-05-06 12:00:48');
+INSERT INTO `users` (`id`, `telegram_id`, `name`, `admin`, `source`, `reg_date`) VALUES
+(1, 251464707, 'Tigran', 1, 'Unknown', '2025-05-02 19:29:26'),
+(2, 1, 'root', 1, 'Unknown', '2025-05-03 09:40:51'),
+(4, 592048273, 'Artur', 0, 'Unknown', '2025-05-03 16:39:25'),
+(5, 464651097, 'Max', 0, 'Unknown', '2025-05-03 17:58:14');
 
 --
 -- Индексы сохранённых таблиц
@@ -161,19 +163,19 @@ ALTER TABLE `answer`
 -- AUTO_INCREMENT для таблицы `api_keys`
 --
 ALTER TABLE `api_keys`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
