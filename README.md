@@ -87,7 +87,8 @@ It also showcases logging architecture, code quality tooling (flake8 + black), a
 ## 🔌 API Endpoints
 
 - `POST /apikey/add` — Generates a new API key  
-- `GET /review_list/<user_id>` — Returns user reviews  
+- `GET /review_list/<user_id>` — Returns user reviews
+- `GET /logs/view` — Shows all system logs
 
 ---
 
