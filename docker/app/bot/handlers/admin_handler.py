@@ -14,6 +14,8 @@ from bot.messenger import send_message_safe
 load_dotenv()
 api_admin_key = os.getenv("API_ADMIN_KEY")
 api_domain = os.getenv("API_DOMAIN")
+if not api_admin_key or not api_domain:
+    raise ValueError("Missing API credentials in environment variables.")
 
 
 def register_admin_handlers(dp: Dispatcher):
@@ -54,7 +56,9 @@ async def process_create_api(callback_query: types.CallbackQuery):
     try:
         internal_user_id = await get_internal_user_id(callback_query.from_user.id)
         response = requests.post(
-            f"{api_domain}/apikey/add?admin_key={api_admin_key}&user_id={internal_user_id}"
+            f"{api_domain}/apikey/add",
+            params={"admin_key": api_admin_key, "user_id": internal_user_id},
+            timeout=5,
         )
         if response.status_code == 200:
             api_key = response.json().get("api_key")

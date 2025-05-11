@@ -5,6 +5,8 @@ import logging
 
 load_dotenv()
 gemini_token = os.getenv("GEMINI_API_KEY")
+if not gemini_token:
+    raise ValueError("Missing Gemini API Key credential in environment variables.")
 
 
 async def generate_gemini_review_answer(username, stars, text):

@@ -7,7 +7,7 @@ from logic.functions import convert_number_to_stars, format_date
 async def save_review(
     user_id: int, rating: int, text: str, ai_response: str
 ) -> int | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         internal_user_id = await get_internal_user_id(user_id)
@@ -33,7 +33,7 @@ async def save_review(
 
 
 async def get_latest_user_review(telegram_id: int) -> dict | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
@@ -90,7 +90,7 @@ async def get_latest_user_review(telegram_id: int) -> dict | None:
 
 
 async def get_all_reviews() -> list[dict] | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
@@ -147,7 +147,7 @@ async def get_all_reviews() -> list[dict] | None:
 
 
 async def get_user_reviews(userid) -> list[dict] | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     query = """
             SELECT
@@ -204,7 +204,7 @@ async def get_user_reviews(userid) -> list[dict] | None:
 
 
 async def get_global_stats() -> dict:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         # Total number of reviews and average rating

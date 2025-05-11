@@ -110,6 +110,11 @@ async def show_last_review(callback_query: types.CallbackQuery):
     review = await get_latest_user_review(user_id)
     if review is None or not review.get("r_id"):
         bot_username = os.getenv("TG_BOT_USERNAME")
+        if not bot_username:
+            raise ValueError(
+                "Missing TelegramUserName credential in environment variables."
+            )
+
         link = f"https://t.me/{bot_username}?start=addreview"
         text = (
             "It looks like you haven’t written a review yet.\n"

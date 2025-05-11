@@ -4,7 +4,7 @@ from database.connection import get_connection
 
 
 async def add_user_to_db(telegram_id: int, name: str):
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
@@ -24,7 +24,7 @@ async def add_user_to_db(telegram_id: int, name: str):
 
 
 async def get_internal_user_id(telegram_id: int) -> int | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT id FROM users WHERE telegram_id = %s", (telegram_id,))
@@ -36,7 +36,7 @@ async def get_internal_user_id(telegram_id: int) -> int | None:
 
 
 async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT name FROM users WHERE telegram_id = %s", (telegram_id,))
@@ -48,7 +48,7 @@ async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
 
 
 async def load_admins():
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT telegram_id FROM users WHERE admin = 1")
@@ -63,7 +63,7 @@ async def load_admins():
 
 
 async def get_user_profile(user_id: int):
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     try:
         cursor.execute(

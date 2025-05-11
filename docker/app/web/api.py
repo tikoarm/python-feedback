@@ -1,13 +1,15 @@
 from flask import Flask, jsonify, request
 import asyncio
-from database.reviews import get_all_reviews, get_user_reviews
-from cache import api_keys
-
 import os
 from dotenv import load_dotenv
 
+from database.reviews import get_all_reviews, get_user_reviews
+from cache import api_keys
+
 load_dotenv()
 admin_key = os.getenv("API_ADMIN_KEY")
+if not admin_key:
+    raise ValueError("Missing API Admin Key credential in environment variables.")
 
 app = Flask(__name__)
 
@@ -61,4 +63,4 @@ def add_api_key():
 
 
 def start_api():
-    app.run(host="0.0.0.0", port=5050)
+    app.run(host="0.0.0.0", port=5050, debug=False)  # nosec

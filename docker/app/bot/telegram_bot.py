@@ -19,6 +19,9 @@ from bot import messenger
 
 load_dotenv()
 tg_token = os.getenv("TG_TOKEN")
+if not tg_token:
+    raise ValueError("Missing Telegram credential in environment variables.")
+
 bot = Bot(token=tg_token)
 dp = Dispatcher(bot)
 

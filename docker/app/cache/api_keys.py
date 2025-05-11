@@ -19,7 +19,7 @@ def is_valid_api_key(api_key):
 
 
 async def load_api_keys():
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT api_key FROM api_keys")
@@ -35,7 +35,7 @@ async def load_api_keys():
 
 # Telegram Functions
 async def db_add_api_key(api_key: str, user_id: int) -> None:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
@@ -52,7 +52,7 @@ async def db_add_api_key(api_key: str, user_id: int) -> None:
 
 
 async def db_get_all_api_keys():
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     text = []
@@ -72,7 +72,7 @@ async def db_get_all_api_keys():
 
 
 async def db_is_valid_api_key(api_key: str) -> bool:
-    conn = await get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     try:
