@@ -16,12 +16,14 @@ It also showcases logging architecture, code quality tooling (flake8 + black), a
 
 - 🔐 User registration (auto-detects Telegram ID & name)
 - ⭐️ Users can rate the restaurant and leave a written review
-- 👮 Admins can view and respond to user reviews
+- 👮 Admins can view and respond to user reviews  
+  🚧 Admin reply system planned (moderation via bot)
 - 🧾 User profile command with review stats
 - 🧠 Cached review progress and admin list for faster access
 - 🧠 Formatted review summaries with converted ratings and readable dates
 - 🗂️ Linked admin replies to specific reviews
 - 🪵 Logging and error tracking
+- 📂 Online log viewer: view `info`, `warning`, or `error` logs through a PHP frontend
 - 🌐 Simple frontend (PHP): renders user reviews via JSON API
 - 🤖 Gemini AI integration
 - 📊 Review analytics: stats by day, week, month, and average ratings
@@ -89,6 +91,16 @@ It also showcases logging architecture, code quality tooling (flake8 + black), a
 
 ---
 
+## 🔧 Work in Progress / Planned
+
+- ✅ Admins can now reply to user reviews (with Telegram-based moderation)
+- 🔄 Health check endpoint for uptime monitoring and CI/CD readiness
+- 🖥️ VPS deployment (Ubuntu 22 + Docker) in progress, targeting full automation
+- 🔁 CI/CD pipeline planned: GitHub → auto-deploy to VPS container on push
+- 📡 Secure exposure via NGINX reverse proxy with subdomain routing
+
+---
+
 ## 🧠 Tech Highlights
 
 - Uses `asyncio` and `aiogram` for high-concurrency Telegram handling  
@@ -122,7 +134,9 @@ API_DOMAIN=http://app:5050
 ---
 ## ✅ Code Quality
 
-This repo includes a `code_check.py` script to run `flake8` and `black` with auto-generated logs.
+This repo includes a `code_check.py` script to run `flake8`, `black`, `isort`, and `bandit`, with timestamped logs for each check. This helps ensure code consistency, import order, and basic security hygiene.
+
+Automated code checks are enforced via a script to maintain style, import sorting, and security best practices.
 
 ---
 
