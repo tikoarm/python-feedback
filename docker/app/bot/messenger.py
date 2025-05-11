@@ -14,7 +14,8 @@ async def send_message_safe(user_id: int, text: str, **kwargs):
             f"[MESSENGER] Bot is not initialized — message to {user_id} not sent."
         )
         return
-    await _bot.send_message(user_id, text, **kwargs)
+    result = await _bot.send_message(user_id, text, **kwargs)
+    return result
 
 
 async def remove_markup_safe(user_id: int, message_id: int):
