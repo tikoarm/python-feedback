@@ -8,6 +8,8 @@ This project simulates real-world backend logic and integration in a clean, scal
 This bot simulates real-world backend challenges:  
 handling authentication, database structure, user feedback logic, and admin moderation — all in a modular and production-like environment. It demonstrates my backend thinking and integration ability.
 
+It also showcases logging architecture, code quality tooling (flake8 + black), and clean async design patterns.
+
 ---
 
 ## 🚀 Features
@@ -24,6 +26,8 @@ handling authentication, database structure, user feedback logic, and admin mode
 - 🤖 Gemini AI integration
 - 📊 Review analytics: stats by day, week, month, and average ratings
 - 📦 Dockerized: includes MySQL & phpMyAdmin for local development
+- 🧪 `code_check.py`: runs flake8 & black checks with timestamped logs
+- 💬 messenger layer to decouple Telegram bot logic and avoid circular imports
 
 ---
 
@@ -37,6 +41,7 @@ handling authentication, database structure, user feedback logic, and admin mode
 │   │   │   ├── profile_handler.py
 │   │   │   └── admin_handler.py
 │   │   ├── keyboard.py
+│   │   ├── messenger.py            # Abstraction over Telegram bot for safe messaging
 │   │   └── telegram_bot.py
 │   ├── cache/
 │   │   ├── admin.py             # Cached admin logic
@@ -53,7 +58,7 @@ handling authentication, database structure, user feedback logic, and admin mode
 │   └── main.py                  # Entry point
 ├── docker-compose.yml
 ├── Dockerfile
-├── .env.example
+├── .env
 └── requirements.txt
 ```
 
@@ -73,6 +78,7 @@ handling authentication, database structure, user feedback logic, and admin mode
 - **multiprocessing** — to run Telegram bot and web server in parallel
 - **phpMyAdmin** — included via Docker for local database management
 - **Logging, error handling, async I/O**
+- **flake8 & black** — code style checking and auto-formatting
 
 ---
 
@@ -90,6 +96,8 @@ handling authentication, database structure, user feedback logic, and admin mode
 - SQL logic written manually — no ORM used  
 - Production-ready structure with environment separation and Docker  
 - Admin dashboard logic with analytics & review moderation
+- Internal code checker script with timestamped logs (flake8 + black)
+- Unified messaging abstraction via `messenger.py` for clean communication
 
 ---
 
@@ -112,10 +120,16 @@ API_DOMAIN=http://app:5050
 ```
 
 ---
+## ✅ Code Quality
+
+This repo includes a `code_check.py` script to run `flake8` and `black` with auto-generated logs.
+
+---
 
 ## 👨‍💻 Author
 
 Developed by **Tigran Kocharov**  
+GitHub: [tikoarm](https://github.com/tikoarm)  
 📧 tiko.nue@icloud.com
 
 ---
