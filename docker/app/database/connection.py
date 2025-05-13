@@ -1,4 +1,5 @@
 import os
+import time
 
 import mysql.connector
 from dotenv import load_dotenv
@@ -13,8 +14,6 @@ db_database = os.getenv("MYSQL_DATABASE")
 if not db_host or not db_port or not db_user or not db_password or not db_database:
     raise ValueError("Missing DataBase credentials in environment variables.")
 
-
-import time
 
 def get_connection():
     for attempt in range(10):

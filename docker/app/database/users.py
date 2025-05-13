@@ -7,7 +7,7 @@ from database.connection import get_connection
 async def add_user_to_db(telegram_id: int, name: str, source: str):
     prefix = "source_"
     if source and source.startswith(prefix):
-        source = source[len(prefix):]
+        source = source[len(prefix) :]
         source = source.replace("_", ".")
     else:
         source = "Unknown"
@@ -16,7 +16,12 @@ async def add_user_to_db(telegram_id: int, name: str, source: str):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO users (telegram_id, name, source) VALUES (%s, %s, %s)", (telegram_id, name, source,)
+            "INSERT INTO users (telegram_id, name, source) VALUES (%s, %s, %s)",
+            (
+                telegram_id,
+                name,
+                source,
+            ),
         )
         conn.commit()
         logging.info(f"✅ User {telegram_id} ({name}) registered successfully.")
