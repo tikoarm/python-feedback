@@ -96,7 +96,7 @@ It also showcases logging architecture, code quality tooling (flake8 + black), a
 
 - ✅ Admins can now reply to user reviews (with Telegram-based moderation)
 - 🔄 Health check endpoint for uptime monitoring and CI/CD readiness
-- 🖥️ VPS deployment (Ubuntu 22 + Docker) in progress, targeting full automation
+- 🖥️ VPS deployment complete — auto-start via systemd service (`utils/feedback.service`)
 - 🔁 CI/CD pipeline planned: GitHub → auto-deploy to VPS container on push
 - 📡 Secure exposure via NGINX reverse proxy with subdomain routing
 
@@ -146,6 +146,14 @@ Automated code checks are enforced via a script to maintain style, import sortin
 Developed by **Tigran Kocharov**  
 GitHub: [tikoarm](https://github.com/tikoarm)  
 📧 tiko.nue@icloud.com
+
+---
+
+## 🌍 Demo Access
+
+- Website: [feedback.tikoarm.com](https://feedback.tikoarm.com)
+
+> API and database access available on request.
 
 ---
 
