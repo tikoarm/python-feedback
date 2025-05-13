@@ -1,8 +1,6 @@
 import os
 
 from aiogram import Bot, Dispatcher, types
-from dotenv import load_dotenv
-
 from bot import messenger
 from bot.handlers.admin_handler import register_admin_handlers
 from bot.handlers.profile_handler import (
@@ -17,6 +15,7 @@ from bot.keyboard import get_profile_keyboard
 from cache.admin import is_admin
 from cache.api_keys import db_is_valid_api_key
 from database.users import add_user_to_db, get_user_profile
+from dotenv import load_dotenv
 from logic.functions import get_tg_faq_text
 
 load_dotenv()

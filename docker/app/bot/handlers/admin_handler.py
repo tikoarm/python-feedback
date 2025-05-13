@@ -3,8 +3,6 @@ import os
 import requests
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
-from dotenv import load_dotenv
-
 from bot.handlers.profile_handler import set_last_button_message
 from bot.keyboard import global_admins_buttons
 from bot.messenger import send_message_safe
@@ -12,6 +10,7 @@ from cache.admin import is_admin
 from cache.api_keys import db_get_all_api_keys  # , db_is_valid_api_key
 from database.reviews import get_global_stats
 from database.users import get_internal_user_id
+from dotenv import load_dotenv
 
 load_dotenv()
 api_admin_key = os.getenv("API_ADMIN_KEY")

@@ -3,12 +3,11 @@ import os
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils.markdown import hlink
-from dotenv import load_dotenv
-
 from bot.keyboard import get_ratestars_keyboard
 from bot.messenger import remove_markup_safe, send_message_safe
 from database.reviews import get_latest_user_review, save_review
 from database.users import get_user_name_by_telegramid
+from dotenv import load_dotenv
 from logic.functions import convert_number_to_stars, format_date
 from web.gemini import call_gemini, generate_gemini_review_answer
 
