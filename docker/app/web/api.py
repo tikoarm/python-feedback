@@ -126,5 +126,34 @@ def logs_view_process():
     return jsonify({"log_type": logtype_param, "lines": lines})
 
 
+@app.route('/health', methods=['GET'])
+def health():
+    """
+    Health check endpoint returning status of key components and version.
+    """
+    result = {'status': 'ok'}
+
+    # 1) Version
+    version_path = os.path.join(os.getcwd(), 'VERSION')
+    try:
+        with open(version_path, 'r') as f:
+            result['version'] = f.read().strip()
+    except Exception:
+        result['version'] = 'unknown'
+        result['status'] = 'degraded'
+
+    # 2) Database
+    try:
+        from database.connection import get_connection
+        conn = get_connection()
+        conn.close()
+        result['database'] = 'ok'
+    except Exception as e:
+        result['database'] = f'error: {e}'
+        result['status'] = 'degraded'
+
+    return jsonify(result)
+
+
 def start_api():
     app.run(host="0.0.0.0", port=5050, debug=False)  # nosec
