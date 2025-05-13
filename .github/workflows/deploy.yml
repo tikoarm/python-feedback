@@ -8,11 +8,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.5.3
+      - uses: webfactory/ssh-agent@v0.5.3
+        name: Install SSH key
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
@@ -27,9 +26,10 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
-          use-agent: true
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd /root/python-feedback/docker
             git pull origin main
             docker-compose pull
             docker-compose up -d
+            
