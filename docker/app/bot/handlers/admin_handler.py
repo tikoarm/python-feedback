@@ -117,16 +117,20 @@ async def process_admin_info(callback_query: types.CallbackQuery):
         f"⭐️ Average rating: {stats['average_rating']}\n\n"
         f"🕒 Reviews today: {stats['day_count']} (avg: {stats['day_avg']})\n"
         f"📅 Reviews this week: {stats['week_count']} (avg: {stats['week_avg']})\n"
-        f"🗓 Reviews this month: {stats['month_count']} (avg: {stats['month_avg']})\n\n"
-        f"📝 *Last review*:\n"
-        f"👤 User: {lr['user_name']}\n"
-        f"⭐️ {lr['stars']}\n"
-        f"🗓 {lr['date']}\n"
-        f"💬 {lr['text']}\n"
-        f"🤖 AI: {lr['ai_answer']}\n"
+        f"🗓 Reviews this month: {stats['month_count']} (avg: {stats['month_avg']})\n"
     )
-    if lr["admin_answer"]:
-        text += f"\n👮‍♂️ Admin ({lr['admin_name']}): {lr['admin_answer']} ({lr['admin_answer_date']})"
+
+    if lr:
+        text += (
+            "\n\n📝 *Last review*:\n"
+            f"👤 User: {lr['user_name']}\n"
+            f"⭐️ {lr['stars']}\n"
+            f"🗓 {lr['date']}\n"
+            f"💬 {lr['text']}\n"
+            f"🤖 AI: {lr['ai_answer']}\n"
+        )
+        if lr["admin_answer"]:
+            text += f"\n👮‍♂️ Admin ({lr['admin_name']}): {lr['admin_answer']} ({lr['admin_answer_date']})"
 
     await send_message_safe(callback_query.from_user.id, text, parse_mode="Markdown")
 

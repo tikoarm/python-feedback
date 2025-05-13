@@ -22,12 +22,15 @@ def is_valid_api_key(api_key):
 async def load_api_keys():
     conn = get_connection()
     cursor = conn.cursor()
+    keys = []
     try:
         cursor.execute("SELECT api_key FROM api_keys")
         rows = cursor.fetchall()
         keys = [row[0] for row in rows]
         for key in keys:
             api_keys_cache.add(key)
+    except Exception as e:
+        logging.error(f"Failed to load API keys: {e}")
     finally:
         cursor.close()
         conn.close()

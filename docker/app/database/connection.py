@@ -14,11 +14,19 @@ if not db_host or not db_port or not db_user or not db_password or not db_databa
     raise ValueError("Missing DataBase credentials in environment variables.")
 
 
+import time
+
 def get_connection():
-    return mysql.connector.connect(
-        host=db_host,
-        port=db_port,
-        user=db_user,
-        password=db_password,
-        database=db_database,
-    )
+    for attempt in range(10):
+        try:
+            return mysql.connector.connect(
+                host=db_host,
+                port=db_port,
+                user=db_user,
+                password=db_password,
+                database=db_database,
+            )
+        except mysql.connector.Error as e:
+            print(f"[DB] Connection attempt {attempt + 1} failed: {e}")
+            time.sleep(3)
+    raise Exception("⚠️ Failed to connect to the database after multiple attempts.")

@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import time
 from multiprocessing import Process
 
 from bot import telegram_bot
@@ -11,7 +10,6 @@ from web.api import start_api
 
 setup_logger()
 logging.info("⏳ Please wait...")
-time.sleep(2)
 
 
 async def main():
