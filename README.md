@@ -12,6 +12,14 @@ It also showcases logging architecture, code quality tooling (flake8 + black), a
 
 ---
 
+## 🌍 Demo Access
+
+- Website: [feedback.tikoarm.com](https://feedback.tikoarm.com)
+
+> API and database access available on request.
+
+---
+
 ## 🚀 Features
 
 - 🔐 User registration (auto-detects Telegram ID & name)
@@ -147,13 +155,6 @@ Developed by **Tigran Kocharov**
 GitHub: [tikoarm](https://github.com/tikoarm)  
 📧 tiko.nue@icloud.com
 
----
-
-## 🌍 Demo Access
-
-- Website: [feedback.tikoarm.com](https://feedback.tikoarm.com)
-
-> API and database access available on request.
 
 ---
 
