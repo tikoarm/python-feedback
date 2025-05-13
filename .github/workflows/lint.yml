@@ -25,13 +25,13 @@ jobs:
           pip install flake8 black isort bandit
 
       - name: Run Black
-        run: black --check app/
+        run: black --check .
 
       - name: Run Flake8
-        run: flake8 app/
+        run: flake8 .
 
       - name: Run Isort
-        run: isort --check-only app/
+        run: isort --check-only .
 
       - name: Run Bandit
-        run: bandit -r app/
+        run: bandit -r .
