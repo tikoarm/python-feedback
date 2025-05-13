@@ -63,13 +63,19 @@ async def process_text_review(message: types.Message):
         rating = user_ratings.get(user_id)
         name = await get_user_name_by_telegramid(user_id)
 
-        gemini_request = await generate_gemini_review_answer(name, rating, review_text)
+        gemini_request = await generate_gemini_review_answer(
+            name, rating, review_text
+        )
         gemini = await call_gemini(gemini_request)
         reviewid = await save_review(user_id, rating, review_text, gemini)
 
         await send_message_safe(
             user_id,
-            f"🙏 Thank you for your feedback!\nReview ID: {reviewid}\n\n{gemini}",
+            (
+                "🙏 Thank you for your feedback!\n"
+                f"Review ID: {reviewid}\n\n"
+                f"{gemini}"
+            ),
         )
         await cancel_rate_progress_global(user_id, False, False)
 
@@ -80,7 +86,9 @@ async def process_review_cancel(callback_query: types.CallbackQuery):
     await cancel_rate_progress_global(callback_query.from_user.id, True)
 
 
-async def cancel_rate_progress_global(user_id, with_text=False, with_button=True):
+async def cancel_rate_progress_global(
+    user_id, with_text=False, with_button=True
+):
     waiting_for_review.discard(user_id)
     user_ratings.pop(user_id, None)
 
@@ -89,7 +97,8 @@ async def cancel_rate_progress_global(user_id, with_text=False, with_button=True
 
     if with_text:
         await send_message_safe(
-            user_id, "❌ Review submission canceled. You can start over at any time."
+            user_id,
+            "❌ Review submission canceled. You can start over at any time.",
         )
 
 
@@ -141,7 +150,8 @@ async def show_last_review(callback_query: types.CallbackQuery):
         date = format_date(review["a_date"])
         text += (
             "\n\n"
-            f"*Reply from Admin ({review['a_name']} #{review['r_userid']}) – {date}:*\n"
+            f"*Reply from Admin ({review['a_name']} #{review['r_userid']})"
+            f" – {date}:*\n"
             f"{review['a_text']}"
         )
     await send_message_safe(user_id, text, parse_mode="Markdown")

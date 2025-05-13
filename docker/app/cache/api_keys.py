@@ -80,7 +80,9 @@ async def db_is_valid_api_key(api_key: str) -> bool:
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT 1 FROM api_keys WHERE api_key = %s LIMIT 1", (api_key,))
+        cursor.execute(
+            "SELECT 1 FROM api_keys WHERE api_key = %s LIMIT 1", (api_key,)
+        )
         result = cursor.fetchone()
         return result is not None
 

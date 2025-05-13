@@ -9,7 +9,7 @@ timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 tools = [
     ("isort", ["isort", "."]),
-    ("flake8", ["flake8", ".", "--ignore=E501,W503"]),
+    ("flake8", ["flake8", "."]),
     ("black", ["black", "."]),
     ("bandit", ["bandit", "-r", ".", "--exclude", "code_check.py"]),
 ]

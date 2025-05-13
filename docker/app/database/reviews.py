@@ -14,12 +14,18 @@ async def save_review(
         internal_user_id = await get_internal_user_id(user_id)
         if not internal_user_id:
             logging.warning(
-                f"[SAVE_REVIEW] User {user_id} attempted to submit a review but is not registered."
+                (
+                    f"[SAVE_REVIEW] User {user_id} attempted to submit"
+                    " a review but is not registered."
+                )
             )
             return
 
         cursor.execute(
-            "INSERT INTO reviews (userid, stars, text, ai_answer) VALUES (%s, %s, %s, %s)",
+            (
+                "INSERT INTO reviews (userid, stars, text, ai_answer)"
+                " VALUES (%s, %s, %s, %s)"
+            ),
             (internal_user_id, rating, text, ai_response),
         )
         conn.commit()
@@ -211,23 +217,20 @@ async def get_global_stats() -> dict:
         # Total number of reviews and average rating
         cursor.execute("SELECT COUNT(*), AVG(stars) FROM reviews")
         total_count, avg_rating = cursor.fetchone()
+        sql_select = (
+            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW()"
+        )
 
         # In the last day
-        cursor.execute(
-            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 1 DAY"
-        )
+        cursor.execute(f"{sql_select} - INTERVAL 1 DAY")
         day_count, day_avg = cursor.fetchone()
 
         # In the last week
-        cursor.execute(
-            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 7 DAY"
-        )
+        cursor.execute(f"{sql_select} - INTERVAL 7 DAY")
         week_count, week_avg = cursor.fetchone()
 
         # In the last month
-        cursor.execute(
-            "SELECT COUNT(*), AVG(stars) FROM reviews WHERE date >= NOW() - INTERVAL 30 DAY"
-        )
+        cursor.execute(f"{sql_select} - INTERVAL 30 DAY")
         month_count, month_avg = cursor.fetchone()
 
         # Latest review (with user name and answer if available)

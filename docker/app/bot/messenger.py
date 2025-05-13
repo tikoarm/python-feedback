@@ -11,7 +11,10 @@ def init_bot(bot_instance):
 async def send_message_safe(user_id: int, text: str, **kwargs):
     if _bot is None:
         logging.warning(
-            f"[MESSENGER] Bot is not initialized — message to {user_id} not sent."
+            (
+                "[MESSENGER] Bot is not initialized — "
+                f"message to {user_id} not sent."
+            )
         )
         return
     result = await _bot.send_message(user_id, text, **kwargs)
@@ -21,7 +24,10 @@ async def send_message_safe(user_id: int, text: str, **kwargs):
 async def remove_markup_safe(user_id: int, message_id: int):
     if _bot is None:
         logging.warning(
-            f"[MESSENGER] Bot is not initialized — removing markups to {user_id} are not possible."
+            (
+                "[MESSENGER] Bot is not initialized — "
+                f"removing markups to {user_id} are not possible."
+            )
         )
         return
     try:

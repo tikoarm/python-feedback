@@ -16,7 +16,10 @@ async def add_user_to_db(telegram_id: int, name: str, source: str):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO users (telegram_id, name, source) VALUES (%s, %s, %s)",
+            (
+                "INSERT INTO users (telegram_id, name, source)"
+                " VALUES (%s, %s, %s)"
+            ),
             (
                 telegram_id,
                 name,
@@ -24,7 +27,9 @@ async def add_user_to_db(telegram_id: int, name: str, source: str):
             ),
         )
         conn.commit()
-        logging.info(f"✅ User {telegram_id} ({name}) registered successfully.")
+        logging.info(
+            f"✅ User {telegram_id} ({name}) registered successfully."
+        )
         return True
 
     except Exception as e:
@@ -40,7 +45,9 @@ async def get_internal_user_id(telegram_id: int) -> int | None:
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT id FROM users WHERE telegram_id = %s", (telegram_id,))
+        cursor.execute(
+            "SELECT id FROM users WHERE telegram_id = %s", (telegram_id,)
+        )
         row = cursor.fetchone()
         return row[0] if row else None
     finally:
@@ -52,7 +59,9 @@ async def get_user_name_by_telegramid(telegram_id: int) -> str | None:
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT name FROM users WHERE telegram_id = %s", (telegram_id,))
+        cursor.execute(
+            "SELECT name FROM users WHERE telegram_id = %s", (telegram_id,)
+        )
         row = cursor.fetchone()
         return row[0] if row else None
     finally:

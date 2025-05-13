@@ -56,7 +56,9 @@ async def process_create_api(callback_query: types.CallbackQuery):
         return
 
     try:
-        internal_user_id = await get_internal_user_id(callback_query.from_user.id)
+        internal_user_id = await get_internal_user_id(
+            callback_query.from_user.id
+        )
         response = requests.post(
             f"{api_domain}/apikey/add",
             params={"admin_key": api_admin_key, "user_id": internal_user_id},
@@ -116,8 +118,10 @@ async def process_admin_info(callback_query: types.CallbackQuery):
         f"🗂 Total reviews: {stats['total_reviews']}\n"
         f"⭐️ Average rating: {stats['average_rating']}\n\n"
         f"🕒 Reviews today: {stats['day_count']} (avg: {stats['day_avg']})\n"
-        f"📅 Reviews this week: {stats['week_count']} (avg: {stats['week_avg']})\n"
-        f"🗓 Reviews this month: {stats['month_count']} (avg: {stats['month_avg']})\n"
+        f"📅 Reviews this week: {stats['week_count']}"
+        f" (avg: {stats['week_avg']})\n"
+        f"🗓 Reviews this month: {stats['month_count']}"
+        f" (avg: {stats['month_avg']})\n"
     )
 
     if lr:
@@ -130,9 +134,12 @@ async def process_admin_info(callback_query: types.CallbackQuery):
             f"🤖 AI: {lr['ai_answer']}\n"
         )
         if lr["admin_answer"]:
-            text += f"\n👮‍♂️ Admin ({lr['admin_name']}): {lr['admin_answer']} ({lr['admin_answer_date']})"
+            text += f"\n👮‍♂️ Admin ({lr['admin_name']}): {lr['admin_answer']}"
+            text += f" ({lr['admin_answer_date']})"
 
-    await send_message_safe(callback_query.from_user.id, text, parse_mode="Markdown")
+    await send_message_safe(
+        callback_query.from_user.id, text, parse_mode="Markdown"
+    )
 
 
 async def process_show_admin_panel(callback_query: types.CallbackQuery):

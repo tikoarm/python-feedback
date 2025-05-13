@@ -10,7 +10,9 @@ from database.reviews import get_all_reviews, get_user_reviews
 load_dotenv()
 admin_key = os.getenv("API_ADMIN_KEY")
 if not admin_key:
-    raise ValueError("Missing API Admin Key credential in environment variables.")
+    raise ValueError(
+        "Missing API Admin Key credential in environment variables."
+    )
 
 app = Flask(__name__)
 
@@ -117,7 +119,10 @@ def logs_view_process():
             lines = masked_lines[-25:]
 
     except FileNotFoundError:
-        return jsonify({"error": f"Log file for '{logtype_param}' not found"}), 404
+        return (
+            jsonify({"error": f"Log file for '{logtype_param}' not found"}),
+            404,
+        )
 
     return jsonify({"log_type": logtype_param, "lines": lines})
 

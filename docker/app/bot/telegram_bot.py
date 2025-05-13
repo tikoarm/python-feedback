@@ -44,19 +44,25 @@ async def cmd_create_api(message: types.Message):
     args = message.get_args()
     if not args:
         await bot.send_message(
-            message.from_user.id, "*/check_apikey api_key*", parse_mode="Markdown"
+            message.from_user.id,
+            "*/check_apikey api_key*",
+            parse_mode="Markdown",
         )
         return
 
     status = "valid" if await db_is_valid_api_key(args) else "invalid"
     await bot.send_message(
-        message.from_user.id, f"API Key `{args}` is *{status}*", parse_mode="Markdown"
+        message.from_user.id,
+        f"API Key `{args}` is *{status}*",
+        parse_mode="Markdown",
     )
 
 
 @dp.message_handler(commands=["help", "faq"])
 async def cmd_help(message: types.Message):
-    await bot.send_message(message.from_user.id, get_tg_faq_text(), parse_mode="HTML")
+    await bot.send_message(
+        message.from_user.id, get_tg_faq_text(), parse_mode="HTML"
+    )
 
 
 @dp.message_handler(commands=["start"])
@@ -119,7 +125,8 @@ async def register_user(message, args="Unknown"):
         text = (
             "*Welcome, and thank you for registering! 🎉*\n"
             "We're excited to have you with us.\n"
-            "To start using the bot and set up your profile, just type */profile*.\n\n"
+            "To start using the bot and set up your profile,"
+            " just type */profile*.\n\n"
             "Looking forward to hearing your feedback!"
         )
         await bot.send_message(telegram_id, text, parse_mode="Markdown")
