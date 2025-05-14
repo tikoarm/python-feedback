@@ -83,7 +83,7 @@
 
   <hr>
   <small>
-    Powered by Docker, Flask, PHP, MySQL and Nginx on Ubuntu 22.04 VPS.
+    Powered by Docker, Flask, PHP, MySQL and Nginx on Ubuntu 20.04 VPS.
   </small>
 </body>
 </html>
