@@ -72,6 +72,10 @@
             <code>GET /logs/view</code> – retrieve log contents<br>
             Required params: <code>admin_key</code>, <code>log_type</code> (<code>warning</code> | <code>error</code> | <code>info</code>)
           </li>
+          <li>
+            <code>GET /health</code> – retrieves service health status (uptime, version, database)<br>
+            <a href="http://api.feedback.tikoarm.com/health" target="_blank">Open /health</a>
+          </li>
           <li><em>Note: <code>api_key</code> is public (see example above). <code>admin_key</code> is available on request (contact developer).</em></li>
         </ul>
         Base API URL: <a href="http://api.feedback.tikoarm.com/" target="_blank">api.feedback.tikoarm.com</a>
