@@ -1,10 +1,16 @@
 import asyncio
 import os
+import time
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from cache import api_keys
 from database.reviews import get_all_reviews, get_user_reviews
 from dotenv import dotenv_values, load_dotenv
 from flask import Flask, jsonify, request
+from logic.functions import format_seconds
+
+app_start_time = time.time()
 
 load_dotenv()
 admin_key = os.getenv("API_ADMIN_KEY")
@@ -131,7 +137,14 @@ def health():
     """
     Health check endpoint returning status of key components and version.
     """
-    result = {"status": "ok"}
+
+    berlin_time = datetime.now(ZoneInfo("Europe/Berlin"))
+    result = {
+        "status": "ok",
+        "timestamp": berlin_time.isoformat(),
+        "timezone": "Europe/Berlin",
+        "uptime": format_seconds(int(time.time() - app_start_time)),
+    }
 
     # 1) Version
     version_path = os.path.join(os.getcwd(), "VERSION")

@@ -43,3 +43,20 @@ def get_tg_faq_text():
         "🌐 feedback.tikoarm.com/localhost.php"
     )
     return text
+
+
+def format_seconds(seconds: int) -> str:
+    days = seconds // 86400
+    hours = (seconds % 86400) // 3600
+    minutes = (seconds % 3600) // 60
+
+    parts = []
+    if days > 0:
+        parts.append(f"{days} day{'s' if days != 1 else ''}")
+    if hours > 0:
+        parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
+    if minutes > 0:
+        parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+    if not parts:
+        parts.append("less than a minute")
+    return ", ".join(parts)
