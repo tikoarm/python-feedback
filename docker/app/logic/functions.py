@@ -62,4 +62,3 @@ def format_seconds(seconds: int) -> str:
         parts.append(f"{secs} second{'s' if secs != 1 else ''}")
 
     return ", ".join(parts)
-
