@@ -10,8 +10,8 @@ services:
       - db
     ports:
       - "5050:5050"
-    #volumes:
-    #  - ./logs_host:/app/logs
+    volumes:
+      - ./app/logs:/app/logs
 
   db:
     image: mysql:8.0
