@@ -30,6 +30,7 @@ jobs:
           script: |
             cd /root/python-feedback/docker
             git pull origin main
-            docker-compose pull
-            docker-compose up -d --build
+            docker-compose rm -f -s app || true
+            docker-compose build app
+            docker-compose up -d app
             
